@@ -1,39 +1,23 @@
 const express = require("express");
+const knex = require("knex");
+const config = require("./knexfile");
 
 const app = express();
+const db = knex(config.development);
 
-const knex = require("knex")({
-  client: "mysql2",
-  connection: {
-    host: "localhost",
-    user: "root",
-    password: "password",
-    database: "my_database",
-  },
-});
+app.get("/login", function (req, res) {});
+
 
 // Creating a table
-knex.schema
-  .createTable("users", (table) => {
-    table.increments("id").primary();
-    table.string("name");
-    table.string("email").unique();
-  })
-  .then(() => console.log("Table created"));
 
-// Inserting data
-knex("users")
-  .insert({ name: "John Doe", email: "john@example.com" })
-  .then(() => console.log("Data inserted"));
+async function d() {
+  let users = await db.raw("SELECT * FROM users");
+  console.log(users);
+}
+d();
 
-// Querying data
-knex("users")
-  .select("*")
-  .then((users) => console.log(users));
 
-// Executing a raw SQL query
-knex
-  .raw("SELECT * FROM users WHERE email = ?", ["john@example.com"])
-  .then((result) => console.log(result[0]));
 
-app.listen();
+app.get("/api/v1/phones",function(){
+  
+})
