@@ -42,7 +42,7 @@ router.delete('/:id', authenticate, async (req, res) => {
 
   try {
     await knex.raw(`DELETE FROM phones WHERE id = ?`, [id]);
-    res.status(204).send();
+    res.status(204).send();``
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete phone.' });
   }
