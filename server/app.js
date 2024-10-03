@@ -1,9 +1,16 @@
+// process.env.NODE_ENV = 'development'; // development | staging | test | production
 const express = require("express");
 const knex = require("knex");
-const config = require("./knexfile");
-
+const authRoutes = require("./routes/authRoute")
+const brandRoutes = require("./routes/brandRoutes")
+const phoneRoutes = require("./routes/phoneRoutes")
 const app = express();
-const db = knex(config.development);
+
+const db = knex(require("./knexfile").development); // local_sqlite | local_mysql | aws_mysql | aws_mysql_prod
+
+
+app.use(authRoute)
+
 
 app.get("/login", function (req, res) {});
 

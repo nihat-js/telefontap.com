@@ -4,7 +4,14 @@
  * @type { Object.<string, import("knex").Knex.Config> }
  */
 module.exports = {
-  development: {
+  local_sqlite: {
+    client: "sqlite3",
+    connection: {
+      filename: "./database/db.sqlite",
+    },
+    useNullAsDefault: true,
+  },
+  local_mysql: {
     client: "mysql2",
     connection: {
       host: "localhost",
@@ -19,35 +26,33 @@ module.exports = {
     },
   },
 
-  staging: {
-    client: "postgresql",
+  aws_mysql: {
+    client: "mysql2",
     connection: {
-      database: "my_db",
-      user: "username",
-      password: "password",
+      host: "localhost",
+      port: 3306,
+      user: "root",
+      password: "123456",
+      database: "telefontap",
     },
     pool: {
       min: 2,
       max: 10,
-    },
-    migrations: {
-      tableName: "knex_migrations",
     },
   },
 
   production: {
-    client: "postgresql",
+    client: "mysql2",
     connection: {
-      database: "my_db",
-      user: "username",
-      password: "password",
+      host: "localhost",
+      port: 3306,
+      user: "root",
+      password: "123456",
+      database: "telefontap",
     },
     pool: {
       min: 2,
       max: 10,
-    },
-    migrations: {
-      tableName: "knex_migrations",
     },
   },
 };
