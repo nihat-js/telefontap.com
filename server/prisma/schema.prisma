@@ -18,8 +18,10 @@ model User {
   name                  String?
   email                 String    @unique
   phoneNumber           String?
-  phoneNumberVerifiedAt DateTime?
   emailVerifiedAt       DateTime?
+  phoneNumberVerifiedAt DateTime?
+  emailVerificationCode String?
+  phoneVerificationCode String?
   balance               Float     @default(0)
   profilePicture        String?
   lastLogin             DateTime?
