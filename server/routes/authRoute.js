@@ -15,10 +15,9 @@ router.post("/register", async (req, res) => {
     const result = await knex.raw(
       `
       INSERT INTO users (name, email, password, ) 
-      VALUES (?, ?, ?, ?, ?) RETURNING *`,
-      [username, email, hashedPassword, first_name, last_name]
+      VALUES (?, ?, ?, ?) RETURNING *`,
+      [name, email, hashedPassword]
     );
-
     res.status(201).json(result.rows[0]);
   } catch (error) {
     res.status(500).json({ error: "User registration failed." });

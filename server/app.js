@@ -8,6 +8,13 @@ const app = express();
 
 const db = knex(require("./knexfile").development); // local_sqlite | local_mysql | aws_mysql | aws_mysql_prod
 
+const {PrismaClient} = require("@prisma/client")
+
+const prisma= new PrismaClient()
+
+
+app.
+
 
 app.use(authRoute)
 
@@ -19,6 +26,8 @@ app.get("/login", function (req, res) {});
 
 async function d() {
   let users = await db.raw("SELECT * FROM users");
+
+  db.select("*").from("users").whereRaw
   console.log(users);
 }
 d();
@@ -26,5 +35,5 @@ d();
 
 
 app.get("/api/v1/phones",function(){
-  
+
 })
