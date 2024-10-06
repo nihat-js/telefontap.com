@@ -39,9 +39,11 @@ model Session {
   id           Int      @id @default(autoincrement())
   userId       Int
   sessionToken String   @unique // Token to identify the session
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
   expiresAt    DateTime // Expiration date for the session
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   user User @relation(fields: [userId], references: [id])
 }
