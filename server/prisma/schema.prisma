@@ -32,6 +32,18 @@ model User {
   deletedAt    DateTime?
   Wishlist     Wishlist[]
   Notification Notification[]
+  Transaction  Transaction[]
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  sessionToken String   @unique // Token to identify the session
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  expiresAt    DateTime // Expiration date for the session
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Phone {
@@ -43,7 +55,7 @@ model Phone {
   storage     String
   price       Float
   description String
-  authorId    Int
+  userId      Int
 
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -91,4 +103,113 @@ model Notification {
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  senderId   Int
+  receiverId Int
+  listingId  Int
+  content    String
+  createdAt  DateTime @default(now())
+  isRead     Boolean  @default(false)
+}
+
+model Admin {
+  id       Int       @id @default(autoincrement())
+  name     String
+  email    String    @unique
+  password String // Store hashed password
+  role     AdminRole @default(MANAGER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum AdminRole {
+  MANAGER
+  MODERATOR
+}
+
+model Transaction {
+  id              Int             @id @default(autoincrement())
+  userId          Int
+  amount          Float
+  transactionType TransactionType // Enum to specify transaction type (e.g., "CREDIT", "DEBIT")
+  createdAt       DateTime        @default(now())
+
+  User User @relation(fields: [userId], references: [id])
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+}
+
+model Coupon {
+  id            Int       @id @default(autoincrement())
+  code          String    @unique
+  discountValue Float // e.g., percentage or flat amount
+  expiresAt     DateTime?
+  createdAt     DateTime  @default(now())
+
+  isActive Boolean @default(true)
+}
+
+model Feedback {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  listingId Int?
+  rating    Int // Rating scale (1-5)
+  comment   String?
+  createdAt DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id])
+  listing Listing? @relation(fields: [listingId], references: [id])
+}
+
+model ActvitiyLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  action    String // e.g., "LOGIN", "PURCHASE", "LISTING_CREATED"
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model AdminAction {
+  id        Int      @id @default(autoincrement())
+  adminId   Int
+  action    String // e.g., "DELETE_USER", "APPROVE_LISTING"
+  createdAt DateTime @default(now())
+
+  admin Admin @relation(fields: [adminId], references: [id])
+}
+
+model SearchHistory {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  searchTerm String
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model SupportTicket {
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  subject     String
+  description String
+  status      TicketStatus // Enum for ticket status
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
 }
