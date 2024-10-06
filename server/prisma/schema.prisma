@@ -14,12 +14,24 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  name      String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  id                    Int       @id @default(autoincrement())
+  name                  String?
+  email                 String    @unique
+  phoneNumber           String?
+  phoneNumberVerifiedAt DateTime?
+  emailVerifiedAt       DateTime?
+  balance               Float     @default(0)
+  profilePicture        String?
+  lastLogin             DateTime?
+  lastPasswordChange    DateTime?
+  status                String    @default("ACTIVE")
+  twoFactorEnabled      Boolean   @default(false)
+
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  deletedAt    DateTime?
+  Wishlist     Wishlist[]
+  Notification Notification[]
 }
 
 model Phone {
@@ -31,13 +43,24 @@ model Phone {
   storage     String
   price       Float
   description String
+  authorId    Int
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deletedAt DateTime?
+  Wishlist  Wishlist[]
+}
+
+model Brand {
+  id   Int    @id @default(autoincrement())
+  name String
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 }
 
-model PhoneModel {
+model Devvices {
   id   Int    @id @default(autoincrement())
   name String
 
@@ -47,4 +70,25 @@ model PhoneModel {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+}
+
+model Wishlist {
+  id      Int @id @default(autoincrement())
+  userId  Int
+  phoneId Int
+
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+  phone Phone @relation(fields: [phoneId], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
