@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "express-rate-limit": "^7.4.1",
-    "nodemailer": "^6.9.15"
-  }
-}

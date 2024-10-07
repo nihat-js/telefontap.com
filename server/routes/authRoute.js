@@ -4,48 +4,60 @@ const jwt = require("jsonwebtoken");
 const knex = require("../db/connection"); // Adjust the path to your Knex setup
 
 const router = express.Router();
-const JWT_SECRET = "SECRET_KEY_IN_PRODUCTION_NO_ONE_KNOWS_IT"; // Change this to a secure key
 
-// Register a new user
-router.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
 
-  try {
-    const result = await knex.raw(
-      `
-      INSERT INTO users (name, email, password, ) 
-      VALUES (?, ?, ?, ?) RETURNING *`,
-      [name, email, hashedPassword]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    res.status(500).json({ error: "User registration failed." });
+
+async function registerViaEmail(req, res) {
+  const { email, password } = req.body
+  const existingUser = await prisma.user.findUnique({
+    where: { email: email }
+  })
+  if (existingUser) {
+    return res.status(400).json({ message: "User already exists" })
   }
-});
 
-// User login
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const hashedPassword = await hashPassword(password)
+  const newUser = await prisma.user.create({
+    data: { email: email, password: hashedPassword }
+  })
+  res.status(201).json({ message: 'User registered successfully' });
+}
 
-  try {
-    const result = await knex.raw(
-      `
-      SELECT * FROM users WHERE email = ?`,
-      [email]
-    );
 
-    const user = result.rows[0];
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
-      res.json({ token });
-    } else {
-      res.status(401).json({ error: "Invalid credentials" });
+router.post("register", async function (req, res) {
+  // email ? registerViaEmail(req, res) : registerViaPhoneNumber(req, res)
+  registerViaEmail(req, res)
+})
+
+router.post("login", async function (req, res) {
+  const { email, password } = req.body
+  const user = await prisma.user.findUnique({ where: { username } });
+  if (!user || !(await verifyPassword(password, user.password))) {
+    return res.status(401).json({ message: 'Invalid username or password' });
+  }
+
+  // Create a session token
+  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" })
+  await prisma.session.create({
+    data: {
+      token,
+      userId: user.id
     }
-  } catch (error) {
-    res.status(500).json({ error: "Login failed." });
-  }
-});
+  })
+
+  res.json({ message: "Login successfull", token },)
+})
+
+router.post("logout", async (req, res) => {
+  await prisma.session.deleteMany({
+    where: { userId: req.user.userId }
+  })
+  res.json({ message: "Logged out successfully" })
+})
+
+
+
+
 
 module.exports = router;
