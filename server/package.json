@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "node --watch --env-file=.env app.js ",
     "test": "npx mocha tests/*",
-    "prod": "npx prod"
+    "prod": "npx prod",
+    "seed:default": "node prisma/seeders"
   },
   "dependencies": {
     "@faker-js/faker": "^9.0.3",

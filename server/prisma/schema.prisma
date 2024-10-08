@@ -58,10 +58,11 @@ enum VerificationType {
 }
 
 model Session {
-  id           Int      @id @default(autoincrement())
-  userId       Int
-  sessionToken String   @unique // Token to identify the session
-  expiresAt    DateTime // Expiration date for the session
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  ipAddress String
+  token     String   @unique // Token to identify the session
+  expiresAt DateTime // Expiration date for the session
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
