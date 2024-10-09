@@ -46,15 +46,20 @@ model VerificationCode {
   userId    Int
   code      String
   type      VerificationType
-  createdAt DateTime         @default(now())
   expiresAt DateTime
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   user User @relation(fields: [userId], references: [id])
 }
 
 enum VerificationType {
-  EMAIL
-  PHONE
+  CONFIRM_BY_EMAIL
+  CONFIRM_BY_PHONE
+  RESET_BY_EMAIL
+  RESET_BY_PHONE
 }
 
 model Session {

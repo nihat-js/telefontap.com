@@ -4,10 +4,11 @@ const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
 // const knex = require("../db/connection"); // Adjust the path to your Knex setup
 const { hashPassword, verifyPassword } = require("../utils/password")
-const { generateToken } = require("../utils");
-const { DEFAULT_TOKEN_LIFESPAN_MS } = require("../config/constants");
+const { generateSessionToken, generateResetPasswordByEmailCode } = require("../utils");
+const { DEFAULT_TOKEN_LIFESPAN_MS, RESET_PASSWORD_CODE_LIFESPAN } = require("../config/constants");
 const prisma = require("../config/db");
 const parseUserAgent = require("../utils/parseUserAgent");
+const { VerificationType } = require("@prisma/client");
 
 
 const router = express.Router();
@@ -52,7 +53,7 @@ async function registerViaEmail(req, res) {
     }
   })
 
-  const token = generateToken()
+  const token = generateSessionToken()
   const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   const browserInfo = parseUserAgent(req.headers['user-agent'])
   await prisma.session.create({
@@ -84,7 +85,7 @@ async function login(req, res) {
     });
   }
   // Create a session token
-  const token = generateToken()
+  const token = generateSessionToken()
   const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   const browserInfo = parseUserAgent(req.headers['user-agent'])
   await prisma.session.create({
@@ -126,7 +127,34 @@ async function logout(req, res) {
  */
 
 async function forgotPassword(req, res) {
-  req
+  const { email } = req.body
+  if (!email) {
+    return res.status(400).json({
+      code: "EMAIL_REQUIRED"
+    })
+  }
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    return res.status(404).json(
+      { code: 'USER_NOT_FOUND' }
+    )
+  }
+  const code = generateResetPasswordByEmailCode()
+  await prisma.verificationCode.create({
+    data: {
+      code,
+      userId: user.id,
+      type: VerificationType.CONFIRM_BY_EMAIL,
+      expiresAt: new Date(Date.now() + RESET_PASSWORD_CODE_LIFESPAN)
+    }
+  })
+
+  res.status(201).json({
+    code: "CODE_SENT"
+  })
+
+
+
 }
 
 
