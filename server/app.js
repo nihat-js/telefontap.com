@@ -13,6 +13,8 @@ const { API_VERSIONING, ENVIRONMENT } = require("./config/constants");
 const { Server } = require("socket.io")
 const http = require("http");
 const { logRamUsage } = require("./utils/logRamUsage");
+const logger = require('morgan');
+
 // const brandRoutes = require("./routes/brandRoutes")
 // const phoneRoutes = require("./routes/phoneRoutes")
 // const nodemailer = require("nodemailer")
@@ -23,6 +25,7 @@ const io = new Server({
 })
 
 app.use(express.json())
+app.use(logger('dev'));
 app.use(express.static("uploads"))
 app.use(function (req, res, next) {
   res.set("X-Powered-By", "ASP.NET")
@@ -76,7 +79,7 @@ app.listen(port, function (info) {
 
 
 if (ENVIRONMENT.CURRENT != ENVIRONMENT.PRODUCTION) {
-  setInterval(logRamUsage, 1000);
+  setInterval(logRamUsage, 10000);
 }
 
 
