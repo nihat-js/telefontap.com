@@ -27,9 +27,9 @@ router.post("/logout-all-except-me", logoutAllExceptMe)
 
 function social() {
   const idToken = req.body
-  const decodedToken = await admin.auth().verifyIdToken(idToken)
-  const uid = decodedToken.uid
-  admin.SDK_VERSION
+  // const decodedToken = await admin.auth().verifyIdToken(idToken)
+  // const uid = decodedToken.uid
+  // admin.SDK_VERSION
 }
 
 

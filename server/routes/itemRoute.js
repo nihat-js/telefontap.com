@@ -8,7 +8,19 @@ const router = express.Router();
 
 router.post("/upload-image", uploadImage)
 router.post("/item", createPhone)
-router.delete("/item", deletePhone)
+router.delete(":id/item", deletePhone)
+router.post(":id/promote",promote)
+
+
+async function promote(req,body){
+  await prisma.phone.findFirst(id)
+
+}
+
+
+async function deletePhone(){
+
+}
 
 
 async function createPhone(req, res) {

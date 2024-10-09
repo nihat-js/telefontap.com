@@ -1,7 +1,7 @@
 const { createCanvas, loadImage } = require('canvas');
 const fs = require('fs');
 
-async function addTextToImage(imagePath, outputPath, text) {
+async function addWatermark(imagePath, outputPath, text) {
   // Load the image
   const image = await loadImage(imagePath);
 
