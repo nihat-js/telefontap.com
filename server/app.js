@@ -20,9 +20,7 @@ const logger = require('morgan');
 // const nodemailer = require("nodemailer")
 
 
-const io = new Server({
-
-})
+const io = require("socket.io")(require("http").createServer())
 
 app.use(express.json())
 app.use(logger('dev'));
