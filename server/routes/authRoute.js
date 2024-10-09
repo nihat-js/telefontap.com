@@ -9,6 +9,7 @@ const { DEFAULT_TOKEN_LIFESPAN_MS, RESET_PASSWORD_CODE_LIFESPAN } = require("../
 const prisma = require("../config/db");
 const parseUserAgent = require("../utils/parseUserAgent");
 const { VerificationType } = require("@prisma/client");
+const EmailService = require("../service/EmailService");
 
 
 const router = express.Router();
@@ -16,8 +17,27 @@ const router = express.Router();
 
 router.post("/register", register)
 router.post("/login", login)
-router.post("/logout", logout)
 router.post("/forgot-password", forgotPassword)
+router.post("/logout", logout)
+router.post("/verify-email", verifyEmail)
+router.post("/reset-password", resetPassword)
+router.post("/logout-all-except-me", logoutAllExceptMe)
+
+
+
+// router.delete("/devices/:deviceId", removeDevice); // New
+// router.get("/sessions", getUserSessions); // New
+// router.post("/send-verification-code", sendVerificationCode); // New
+// router.post("/confirm-verification-code", confirmVerificationCode); //
+// router.delete("/account", deleteAccount); // New
+// router.get("/auth/social", initiateSocialLogin); // New
+// router.get("/auth/social/callback", socialLoginCallback); // New
+
+
+// router.post("/2fa/enable", enableTwoFactorAuth); // New
+// router.post("/2fa/disable", disableTwoFactorAuth); // New
+// router.post("/2fa/verify", verifyTwoFactorCode); /
+
 
 
 async function register(req, res) {
@@ -110,6 +130,16 @@ async function login(req, res) {
   // })
 }
 
+async function verifyEmail() {
+
+}
+async function resetPassword() {
+
+}
+
+async function changePassword() {
+
+}
 
 async function logout(req, res) {
   await prisma.session.deleteMany({
@@ -118,6 +148,18 @@ async function logout(req, res) {
   res.json({ message: "Logged out successfully" })
 }
 
+async function logoutAllExceptMe(req, res) {
+  await prisma.session.deleteMany({
+    where: {
+      userId: req.user.id,
+      NOT: {
+        id: req.cookie("token"),
+      }
+    }
+
+  })
+  res.json({ message: "Logged out successfully" })
+}
 
 
 
@@ -140,6 +182,8 @@ async function forgotPassword(req, res) {
     )
   }
   const code = generateResetPasswordByEmailCode()
+  let emailService = new EmailService()
+  // emailService.sendVerificationEmail()
   await prisma.verificationCode.create({
     data: {
       code,
@@ -152,8 +196,6 @@ async function forgotPassword(req, res) {
   res.status(201).json({
     code: "CODE_SENT"
   })
-
-
 
 }
 
