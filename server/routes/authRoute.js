@@ -32,6 +32,11 @@ function social() {
   // admin.SDK_VERSION
 }
 
+function loginWithPhoneNumber(){
+
+  //send 4 digit code
+}
+
 
 // router.post("/send-verification-code", sendVerificationCode); // New
 // router.post("/confirm-verification-code", confirmVerificationCode); //
