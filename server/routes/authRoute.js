@@ -9,7 +9,7 @@ const { DEFAULT_TOKEN_LIFESPAN_MS, RESET_PASSWORD_CODE_LIFESPAN } = require("../
 const prisma = require("../config/db");
 const parseUserAgent = require("../utils/parseUserAgent");
 const { VerificationType } = require("@prisma/client");
-const EmailService = require("../service/EmailService");
+const EmailService = require("../services/EmailService");
 const admin = require("firebase-admin")
 
 
