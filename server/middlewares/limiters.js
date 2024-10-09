@@ -7,12 +7,13 @@ const API_ENDPOINT_RATE_LIMIT = {
 };
 
 function useLimiter(req, res, next) {
-  let limitObject = API_ENDPOINT_RATE_LIMIT[req.url]
-  if (limitObject) {
-    rateLimit(limitObject)
-  } else {
-    next()
-  }
+
+  // let limitObject = API_ENDPOINT_RATE_LIMIT[req.url]
+  // if (limitObject) {
+  //   rateLimit(limitObject)
+  // } else {
+  //   next()
+  // }
 }
 
 

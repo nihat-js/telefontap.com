@@ -4,7 +4,7 @@ const { PrismaClient } = require("@prisma/client")
 const port = process.env.PORT || 3000
 const { log } = require('console');
 const { hashPassword, verifyPassword } = require("./utils/password");
-const busboy = require("busboy")
+const Busboy = require('busboy');
 // const knex = require("knex");
 const app = express()
 const { useLimiter } = require("./middlewares/limiters")
@@ -14,6 +14,8 @@ const { Server } = require("socket.io")
 const http = require("http");
 const { logRamUsage } = require("./utils/logRamUsage");
 const logger = require('morgan');
+const path = require("node:path")
+const fs = require("fs")
 
 // const brandRoutes = require("./routes/brandRoutes")
 // const phoneRoutes = require("./routes/phoneRoutes")
@@ -25,27 +27,38 @@ const io = require("socket.io")(require("http").createServer())
 app.use(express.json())
 app.use(logger('dev'));
 app.use(express.static("uploads"))
+// app.use(useLimiter)
 app.use(function (req, res, next) {
   res.set("X-Powered-By", "ASP.NET")
   next()
 })
-app.use(useLimiter)
 // app.disable("x-powered-by")
 
 
-app.post('/me', function (req, res) {
-  var busboy = new Busboy({ headers: req.headers });
-  busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-    var saveTo = path.join('.', filename);
-    console.log('Uploading: ' + saveTo);
+app.post('/upload', function (req, res) {
+  const busboy = Busboy({ headers: req.headers });
+
+  let fileData = {};
+
+  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+    const extension = path.extname(filename.toString());
+    const saveTo = path.join("uploads", `${Date.now()}${extension}`);
+
+    fileData.filename = filename;
+    fileData.mimetype = mimetype;
+
+    // Pipe the file to the save location
     file.pipe(fs.createWriteStream(saveTo));
   });
-  busboy.on('finish', function () {
-    console.log('Upload complete');
-    res.writeHead(200, { 'Connection': 'close' });
-    res.end("That's all folks!");
+
+  busboy.on('finish', () => {
+    res.json({
+      message: 'File uploaded successfully!',
+      file: fileData,
+    });
   });
-  return req.pipe(busboy);
+
+  req.pipe(busboy);
 
 });
 
