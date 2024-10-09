@@ -4,15 +4,19 @@ const { PrismaClient } = require("@prisma/client")
 const port = process.env.PORT || 3000
 const { log } = require('console');
 const { hashPassword, verifyPassword } = require("./utils/password");
+// const knex = require("knex");
 const app = express()
-const prisma = new PrismaClient()
 
 app.use(express.json())
+app.use(function (req, res, next) {
+  res.set("X-Powered-By", "ASP.NET")
+  next()
+})
+// app.disable("x-powered-by")
 
 
 
-// const knex = require("knex");
-// const authRoutes = require("./routes/authRoute")
+const authRoute = require("./routes/authRoute")
 // const brandRoutes = require("./routes/brandRoutes")
 // const phoneRoutes = require("./routes/phoneRoutes")
 // const nodemailer = require("nodemailer")
@@ -22,9 +26,11 @@ app.use(express.json())
 
 app.get("/test", function (req, res) {
   res.json({
-    "message": "Server is up"
+    code: "SERVER_IS_UP"
   })
 })
+
+app.use("/api/v1/auth/", authRoute)
 
 
 

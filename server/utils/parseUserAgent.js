@@ -1,3 +1,5 @@
+const { parse } = require("path");
+
 function parseUserAgent(userAgent) {
   let browserName = "Unknown Browser";
   let fullVersion = "Unknown Version";
@@ -24,3 +26,5 @@ function parseUserAgent(userAgent) {
 
   return `${browserName} ${fullVersion}`;
 }
+
+module.exports = parseUserAgent

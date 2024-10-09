@@ -1,26 +1,25 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE `User` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `phoneNumber` VARCHAR(191) NULL,
+    `password` VARCHAR(191) NOT NULL,
+    `emailVerifiedAt` DATETIME(3) NULL,
+    `phoneNumberVerifiedAt` DATETIME(3) NULL,
+    `balance` DOUBLE NOT NULL DEFAULT 0,
+    `profilePicture` VARCHAR(191) NULL,
+    `lastLogin` DATETIME(3) NULL,
+    `lastPasswordChange` DATETIME(3) NULL,
+    `status` VARCHAR(191) NOT NULL DEFAULT 'ACTIVE',
+    `twoFactorEnabled` BOOLEAN NOT NULL DEFAULT false,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `deletedAt` DATETIME(3) NULL,
 
-  - You are about to drop the `phonemodel` table. If the table is not empty, all the data it contains will be lost.
-  - Added the required column `userId` to the `Phone` table without a default value. This is not possible if the table is not empty.
-
-*/
--- AlterTable
-ALTER TABLE `phone` ADD COLUMN `userId` INTEGER NOT NULL;
-
--- AlterTable
-ALTER TABLE `user` ADD COLUMN `balance` DOUBLE NOT NULL DEFAULT 0,
-    ADD COLUMN `emailVerifiedAt` DATETIME(3) NULL,
-    ADD COLUMN `lastLogin` DATETIME(3) NULL,
-    ADD COLUMN `lastPasswordChange` DATETIME(3) NULL,
-    ADD COLUMN `phoneNumber` VARCHAR(191) NULL,
-    ADD COLUMN `phoneNumberVerifiedAt` DATETIME(3) NULL,
-    ADD COLUMN `profilePicture` VARCHAR(191) NULL,
-    ADD COLUMN `status` VARCHAR(191) NOT NULL DEFAULT 'ACTIVE',
-    ADD COLUMN `twoFactorEnabled` BOOLEAN NOT NULL DEFAULT false;
-
--- DropTable
-DROP TABLE `phonemodel`;
+    UNIQUE INDEX `User_email_key`(`email`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `VerificationCode` (
@@ -38,13 +37,32 @@ CREATE TABLE `VerificationCode` (
 CREATE TABLE `Session` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
-    `sessionToken` VARCHAR(191) NOT NULL,
+    `ipAddress` VARCHAR(191) NOT NULL,
+    `token` VARCHAR(191) NOT NULL,
     `expiresAt` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `deletedAt` DATETIME(3) NULL,
 
-    UNIQUE INDEX `Session_sessionToken_key`(`sessionToken`),
+    UNIQUE INDEX `Session_token_key`(`token`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Phone` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `brand` VARCHAR(191) NOT NULL,
+    `model` VARCHAR(191) NOT NULL,
+    `brandId` INTEGER NULL,
+    `modelId` INTEGER NULL,
+    `storage` VARCHAR(191) NOT NULL,
+    `price` DOUBLE NOT NULL,
+    `description` VARCHAR(191) NOT NULL,
+    `userId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `deletedAt` DATETIME(3) NULL,
+
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

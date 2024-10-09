@@ -1,0 +1,6 @@
+const DEFAULT_TOKEN_LIFESPAN_MS = 14 * 24 * 60 * 60 * 1000
+
+
+module.exports = {
+  DEFAULT_TOKEN_LIFESPAN_MS
+}
