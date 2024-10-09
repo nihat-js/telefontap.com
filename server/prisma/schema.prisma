@@ -66,7 +66,7 @@ model Session {
   id          Int      @id @default(autoincrement())
   userId      Int
   ipAddress   String
-  token       String   @unique // Token to identify the session
+  token       String   @unique // Token to identify the session // remove @unique
   expiresAt   DateTime // Expiration date for the session
   browserInfo String
 
@@ -77,21 +77,55 @@ model Session {
   user User @relation(fields: [userId], references: [id])
 }
 
-model Phone {
-  id          Int    @id @default(autoincrement())
+enum Category {
+  PHONE
+  TABLET
+  PC
+  LAPTOP
+  EARPHONE
+  EARBUD
+}
+
+model Listings {
+  id          Int     @id @default(autoincrement())
+  category    String?
   brand       String
-  model       String
   brandId     Int?
+  model       String
   modelId     Int?
-  storage     String
+  color       String
   price       Float
   description String
   userId      Int
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   deletedAt DateTime?
+  images    ItemImage[]
   Wishlist  Wishlist[]
+}
+
+model ItemProperty {
+  id        Int    @id @default(autoincrement())
+  productId Int
+  key       String // e.g., "color", "storage"
+  value     String // e.g., "black", "64GB"
+
+  item Item @relation(fields: [productId], references: [id])
+}
+
+model ItemImage {
+  id     Int     @id @default(autoincrement())
+  url    String  @unique
+  userId Int
+  itemId Boolean @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  item Item @relation(fields: [itemId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Brand {

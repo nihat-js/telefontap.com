@@ -10,6 +10,7 @@ const prisma = require("../config/db");
 const parseUserAgent = require("../utils/parseUserAgent");
 const { VerificationType } = require("@prisma/client");
 const EmailService = require("../service/EmailService");
+const admin = require("firebase-admin")
 
 
 const router = express.Router();
@@ -24,14 +25,21 @@ router.post("/reset-password", resetPassword)
 router.post("/logout-all-except-me", logoutAllExceptMe)
 
 
+function social() {
+  const idToken = req.body
+  const decodedToken = await admin.auth().verifyIdToken(idToken)
+  const uid = decodedToken.uid
+  admin.SDK_VERSION
+}
 
-// router.delete("/devices/:deviceId", removeDevice); // New
-// router.get("/sessions", getUserSessions); // New
+
 // router.post("/send-verification-code", sendVerificationCode); // New
 // router.post("/confirm-verification-code", confirmVerificationCode); //
 // router.delete("/account", deleteAccount); // New
 // router.get("/auth/social", initiateSocialLogin); // New
 // router.get("/auth/social/callback", socialLoginCallback); // New
+
+
 
 
 // router.post("/2fa/enable", enableTwoFactorAuth); // New
