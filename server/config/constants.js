@@ -124,9 +124,15 @@ const USER_ROLE_ADMIN = 'admin'; // Role for admin users
 const USER_ROLE_MEMBER = 'member'; // Role for regular members
 const USER_ROLE_GUEST = 'guest'; // Role for guest users
 
-const ENVIRONMENT = process.env.NODE_ENV || 'development'; // Application environment (development/production)
+const ENVIRONMENT = {
+  CURRENT: process.NODE_ENV || "development",
+  DEVELOPMENT: "development",
+  TESTING: "testing",
+  STATGING: "staging",
+  PRODUCTION: "production",
+}
 
-const CURRENT_API_VERSION = "v1"
+
 const DEFAULT_LANGUAGE = "en"
 const DEFAULT_TIMEZONE = "UTC"
 const SEARCH_RESULTS_PER_PAGE = 10
@@ -272,5 +278,7 @@ const USER_AGREEMENT = {
 module.exports = {
   DEFAULT_TOKEN_LIFESPAN_MS,
   RESET_PASSWORD_CODE_LIFESPAN,
-  ONE_MINUTE_MS
+  ONE_MINUTE_MS,
+  API_VERSIONING,
+  ENVIRONMENT
 }

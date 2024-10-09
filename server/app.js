@@ -9,11 +9,21 @@ const busboy = require("busboy")
 const app = express()
 const { useLimiter } = require("./middlewares/limiters")
 const authRoute = require("./routes/authRoute");
+const { API_VERSIONING, ENVIRONMENT } = require("./config/constants");
+const { Server } = require("socket.io")
+const http = require("http");
+const { logRamUsage } = require("./utils/logRamUsage");
 // const brandRoutes = require("./routes/brandRoutes")
 // const phoneRoutes = require("./routes/phoneRoutes")
 // const nodemailer = require("nodemailer")
 
+
+const io = new Server({
+
+})
+
 app.use(express.json())
+app.use(express.static("uploads"))
 app.use(function (req, res, next) {
   res.set("X-Powered-By", "ASP.NET")
   next()
@@ -49,7 +59,7 @@ app.get("/test", function (req, res) {
   })
 })
 
-app.use("/api/v1/auth/", authRoute)
+app.use("/api/" + API_VERSIONING.CURRENT_VERSION + "/auth/", authRoute)
 
 
 
@@ -65,10 +75,9 @@ app.listen(port, function (info) {
 
 
 
-
-
-
-
+if (ENVIRONMENT.CURRENT != ENVIRONMENT.PRODUCTION) {
+  setInterval(logRamUsage, 1000);
+}
 
 
 // app.listen(process.env.PORT ||)
