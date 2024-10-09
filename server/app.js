@@ -7,21 +7,38 @@ const { hashPassword, verifyPassword } = require("./utils/password");
 const busboy = require("busboy")
 // const knex = require("knex");
 const app = express()
-
+const { useLimiter } = require("./middlewares/limiters")
+const authRoute = require("./routes/authRoute");
+// const brandRoutes = require("./routes/brandRoutes")
+// const phoneRoutes = require("./routes/phoneRoutes")
+// const nodemailer = require("nodemailer")
 
 app.use(express.json())
 app.use(function (req, res, next) {
   res.set("X-Powered-By", "ASP.NET")
   next()
 })
+app.use(useLimiter)
 // app.disable("x-powered-by")
 
 
+app.post('/me', function (req, res) {
+  var busboy = new Busboy({ headers: req.headers });
+  busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+    var saveTo = path.join('.', filename);
+    console.log('Uploading: ' + saveTo);
+    file.pipe(fs.createWriteStream(saveTo));
+  });
+  busboy.on('finish', function () {
+    console.log('Upload complete');
+    res.writeHead(200, { 'Connection': 'close' });
+    res.end("That's all folks!");
+  });
+  return req.pipe(busboy);
 
-const authRoute = require("./routes/authRoute")
-// const brandRoutes = require("./routes/brandRoutes")
-// const phoneRoutes = require("./routes/phoneRoutes")
-// const nodemailer = require("nodemailer")
+});
+
+
 
 
 
