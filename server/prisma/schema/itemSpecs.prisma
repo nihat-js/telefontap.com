@@ -1,0 +1,40 @@
+model PhoneSpec {
+  id              Int     @id @default(autoincrement())
+  brand           String
+  model           String
+  ramInGB         Int? // RAM capacity in GB
+  batteryCapacity Int? // Battery capacity in mAh
+  screenSize      Float? // Screen size in inches
+  operatingSystem String? // Operating system (e.g., Android, iOS)
+  releaseYear     Int? // Year of release
+
+  items Item[] @relation("PhoneSpecsItems") // Relation to Item model
+}
+
+model LaptopSpecs {
+  id              Int     @id @default(autoincrement())
+  brand           String
+  model           String
+  ramInGB         Int? // RAM capacity
+  storageInGB     Int? // Storage capacity
+  screenSize      Float? // Screen size
+  batteryCapacity Int? // Battery capacity
+  operatingSystem String? // Operating system
+  releaseYear     Int?
+
+  items Item[] @relation("LaptopSpecsItems")
+}
+
+model TabletSpecs {
+  id              Int     @id @default(autoincrement())
+  brand           String
+  model           String
+  ramInGB         Int?
+  storageInGB     Int?
+  screenSize      Float?
+  batteryCapacity Int?
+  operatingSystem String?
+  releaseYear     Int?
+
+  items Item[] @relation("TabletSpecsItems")
+}

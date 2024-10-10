@@ -10,18 +10,29 @@ model Item {
   description String?
   userId      Int
   user        User    @relation(fields: [userId], references: [id]) // Relation to User model
+  //optional
+  storageInGB Int?
+  ramInGB     Int?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  images    ItemImage[] @relation("ItemImages") // Ensure correct naming for the relation
-  favorites Favorite[]  @relation("ItemFavorites") // Correct naming for favorites
+  images    ItemImage[] // @relation("ItemImages") // Ensure correct naming for the relation
+  favorites Favorite[] // @relation("ItemFavorites") // Correct naming for favorites
 
   // Add additional fields if necessary
-  condition String? // e.g., "new", "used"
-  location  String? // Optional location for the item
+  condition ItemCondition // e.g., "new", "used"
+  cityId    Int?
+  city      City
+  countryId Int?
+  country   Country
   warranty  String? // Optional warranty information
+}
+
+enum ItemCondition {
+  NEW
+  USED
 }
 
 model ItemProperty {
@@ -58,14 +69,27 @@ model Brand {
   deletedAt DateTime?
 }
 
-model Favorites {
-  id      Int @id @default(autoincrement())
-  userId  Int
-  phoneId Int
-
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  itemId    Int
   createdAt DateTime @default(now())
 
-  user       User      @relation(fields: [userId], references: [id])
-  Listings   Listings? @relation(fields: [listingsId], references: [id])
-  listingsId Int?
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum ItemCategory {
+  PHONE
+  TABLET
+  LAPTOP
+  PC
+  SMART_TV
+  SMARTWATCH
+  CAMERA
+  SMART_HOME_DEVICE
+  PRINTER
+  KEYBOARD
+  MONITOR
+  MOUSE
+  CABLES_AND_ADAPTERS
 }

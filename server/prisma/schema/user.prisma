@@ -13,18 +13,17 @@ model User {
   status                String    @default("ACTIVE")
   twoFactorEnabled      Boolean   @default(false)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-  Session   Session[]
-  // Favorites        Favorites[]
-  // Notification     Notification[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  deletedAt        DateTime?
+  Session          Session[]
+  Favorites        Favorites[]
+  Notification     Notification[]
+  ActvitiyLog      ActvitiyLog[]
+  SearchHistory    SearchHistory[]
+  SupportTicket    SupportTicket[]
+  VerificationCode VerificationCode[]
   // Transaction      Transaction[]
-  // ActvitiyLog      ActvitiyLog[]
-  // SearchHistory    SearchHistory[]
-  // SupportTicket    SupportTicket[]
-  // VerificationCode VerificationCode[]
-  // ItemImage        ItemImage[]
 }
 
 model VerificationCode {
