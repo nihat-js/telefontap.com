@@ -5,9 +5,10 @@ model Admin {
   password String // Store hashed password
   role     AdminRole @default(MANAGER)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   // AdminAction AdminAction[]
+  AdminAction AdminAction[]
 }
 
 enum AdminRole {

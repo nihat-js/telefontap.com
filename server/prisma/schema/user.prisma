@@ -17,13 +17,16 @@ model User {
   updatedAt        DateTime           @updatedAt
   deletedAt        DateTime?
   Session          Session[]
-  Favorites        Favorites[]
+  Favorite         Favorite[]
   Notification     Notification[]
   ActvitiyLog      ActvitiyLog[]
   SearchHistory    SearchHistory[]
   SupportTicket    SupportTicket[]
   VerificationCode VerificationCode[]
+  Feedback         Feedback[]
+  ItemImage        ItemImage[]
   // Transaction      Transaction[]
+  Item             Item[]
 }
 
 model VerificationCode {

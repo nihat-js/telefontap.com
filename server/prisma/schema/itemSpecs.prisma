@@ -8,7 +8,7 @@ model PhoneSpec {
   operatingSystem String? // Operating system (e.g., Android, iOS)
   releaseYear     Int? // Year of release
 
-  items Item[] @relation("PhoneSpecsItems") // Relation to Item model
+  // items Item[]
 }
 
 model LaptopSpecs {
@@ -22,7 +22,7 @@ model LaptopSpecs {
   operatingSystem String? // Operating system
   releaseYear     Int?
 
-  items Item[] @relation("LaptopSpecsItems")
+  // items Item[]
 }
 
 model TabletSpecs {
@@ -36,5 +36,5 @@ model TabletSpecs {
   operatingSystem String?
   releaseYear     Int?
 
-  items Item[] @relation("TabletSpecsItems")
+  // items Item[] 
 }
