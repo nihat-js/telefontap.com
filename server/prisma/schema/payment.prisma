@@ -1,0 +1,24 @@
+// model Transaction {
+//   id              Int             @id @default(autoincrement())
+//   userId          Int
+//   amount          Float
+//   transactionType TransactionType // Enum to specify transaction type (e.g., "CREDIT", "DEBIT")
+//   createdAt       DateTime        @default(now())
+
+//   User User @relation(fields: [userId], references: [id])
+// }
+
+// enum TransactionType {
+//   CREDIT
+//   DEBIT
+// }
+
+// model Coupon {
+//   id            Int       @id @default(autoincrement())
+//   code          String    @unique
+//   discountValue Float // e.g., percentage or flat amount
+//   expiresAt     DateTime?
+//   createdAt     DateTime  @default(now())
+
+//   isActive Boolean @default(true)
+// }

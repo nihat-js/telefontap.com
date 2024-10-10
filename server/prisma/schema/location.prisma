@@ -1,0 +1,17 @@
+model Country {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  code      String   @unique // ISO code (e.g., "US" for the United States)
+  cities    City[]   @relation("CountryCities")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model City {
+  id        Int      @id @default(autoincrement())
+  name      String
+  countryId Int
+  country   Country  @relation("CountryCities", fields: [countryId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

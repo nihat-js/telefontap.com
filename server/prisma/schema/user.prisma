@@ -1,0 +1,92 @@
+model User {
+  id                    Int       @id @default(autoincrement())
+  name                  String?
+  email                 String    @unique
+  phoneNumber           String?   @unique
+  password              String
+  emailVerifiedAt       DateTime?
+  phoneNumberVerifiedAt DateTime?
+  balance               Float     @default(0)
+  profilePicture        String?
+  lastLogin             DateTime?
+  lastPasswordChange    DateTime?
+  status                String    @default("ACTIVE")
+  twoFactorEnabled      Boolean   @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  Session   Session[]
+  // Favorites        Favorites[]
+  // Notification     Notification[]
+  // Transaction      Transaction[]
+  // ActvitiyLog      ActvitiyLog[]
+  // SearchHistory    SearchHistory[]
+  // SupportTicket    SupportTicket[]
+  // VerificationCode VerificationCode[]
+  // ItemImage        ItemImage[]
+}
+
+model VerificationCode {
+  id        Int              @id @default(autoincrement())
+  userId    Int
+  code      String
+  type      VerificationType
+  expiresAt DateTime
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum VerificationType {
+  CONFIRM_BY_EMAIL
+  CONFIRM_BY_PHONE
+  RESET_BY_EMAIL
+  RESET_BY_PHONE
+}
+
+model Session {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  ipAddress   String
+  token       String   @unique // Token to identify the session // remove @unique
+  expiresAt   DateTime // Expiration date for the session
+  browserInfo String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model ActvitiyLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  action    String // e.g., "LOGIN", "PURCHASE", "LISTING_CREATED"
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model SearchHistory {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  searchTerm String
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}

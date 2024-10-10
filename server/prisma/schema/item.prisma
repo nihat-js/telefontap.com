@@ -1,0 +1,71 @@
+model Item {
+  id          Int     @id @default(autoincrement())
+  category    String? // Consider using a relation to a Category model for better organization
+  brand       String
+  brandId     Int? // @relation(fields: [brandId], references: [id]) // Ensure foreign key relation if there's a Brand model
+  model       String
+  modelId     Int? // @relation(fields: [modelId], references: [id]) // Same for Model, if applicable
+  color       String?
+  price       Float
+  description String?
+  userId      Int
+  user        User    @relation(fields: [userId], references: [id]) // Relation to User model
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  images    ItemImage[] @relation("ItemImages") // Ensure correct naming for the relation
+  favorites Favorite[]  @relation("ItemFavorites") // Correct naming for favorites
+
+  // Add additional fields if necessary
+  condition String? // e.g., "new", "used"
+  location  String? // Optional location for the item
+  warranty  String? // Optional warranty information
+}
+
+model ItemProperty {
+  id        Int    @id @default(autoincrement())
+  productId Int
+  key       String // e.g., "color", "storage"
+  value     String // e.g., "black", "64GB"
+
+  // item Item @relation(fields: [productId], references: [id])
+}
+
+model ItemImage {
+  id     Int     @id @default(autoincrement())
+  url    String  @unique
+  userId Int
+  itemId Boolean @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // item Item @relation(fields: [itemId], references: [id])
+  user       User @relation(fields: [userId], references: [id])
+  // Listings   Listings? @relation(fields: [listingsId], references: [id])
+  listingsId Int?
+}
+
+model Brand {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model Favorites {
+  id      Int @id @default(autoincrement())
+  userId  Int
+  phoneId Int
+
+  createdAt DateTime @default(now())
+
+  user       User      @relation(fields: [userId], references: [id])
+  Listings   Listings? @relation(fields: [listingsId], references: [id])
+  listingsId Int?
+}

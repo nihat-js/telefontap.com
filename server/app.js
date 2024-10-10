@@ -16,13 +16,14 @@ const { logRamUsage } = require("./utils/logRamUsage");
 const logger = require('morgan');
 const path = require("node:path")
 const fs = require("fs")
-
+// const swaggerUi = require('swagger-ui-express');
+// const swaggerDocument = require('./swagger.json');
 // const brandRoutes = require("./routes/brandRoutes")
 // const phoneRoutes = require("./routes/phoneRoutes")
 // const nodemailer = require("nodemailer")
+// const io = require("socket.io")(require("http").createServer())
 
 
-const io = require("socket.io")(require("http").createServer())
 
 app.use(express.json())
 app.use(logger('dev'));
@@ -63,10 +64,6 @@ app.post('/upload', function (req, res) {
 });
 
 
-
-
-
-
 app.get("/test", function (req, res) {
   res.json({
     code: "SERVER_IS_UP"
@@ -77,9 +74,8 @@ app.use("/api/" + API_VERSIONING.CURRENT_VERSION + "/auth/", authRoute)
 
 
 
-app.post("/api/v1/profile/changeProfilePicture", function (req, res) {
 
-})
+
 
 
 app.listen(port, function (info) {
@@ -94,11 +90,6 @@ if (ENVIRONMENT.CURRENT != ENVIRONMENT.PRODUCTION) {
 }
 
 
-// app.listen(process.env.PORT ||)
 
 
-
-// console.log(process.env.NODE_ENV)
-// console.log(proc)
-// console.log("off")
 
