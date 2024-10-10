@@ -36,33 +36,6 @@ app.use(function (req, res, next) {
 // app.disable("x-powered-by")
 
 
-app.post('/upload', function (req, res) {
-  const busboy = Busboy({ headers: req.headers });
-
-  let fileData = {};
-
-  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-    const extension = path.extname(filename.toString());
-    const saveTo = path.join("uploads", `${Date.now()}${extension}`);
-
-    fileData.filename = filename;
-    fileData.mimetype = mimetype;
-
-    // Pipe the file to the save location
-    file.pipe(fs.createWriteStream(saveTo));
-  });
-
-  busboy.on('finish', () => {
-    res.json({
-      message: 'File uploaded successfully!',
-      file: fileData,
-    });
-  });
-
-  req.pipe(busboy);
-
-});
-
 
 app.get("/test", function (req, res) {
   res.json({

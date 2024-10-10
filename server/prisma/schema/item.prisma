@@ -18,8 +18,10 @@ model Item {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  images    ItemImage[] // @relation("ItemImages") // Ensure correct naming for the relation
-  favorites Favorite[] // @relation("ItemFavorites") // Correct naming for favorites
+  images        ItemImage[] // @relation("ItemImages") // Ensure correct naming for the relation
+  favorites     Favorite[] // @relation("ItemFavorites") // Correct naming for favorites
+  favoriteCount Int         @default(0)
+  viewCount     Int         @default(0)
 
   // Add additional fields if necessary
   condition ItemCondition // e.g., "new", "used"
