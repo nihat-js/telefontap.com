@@ -72,6 +72,16 @@ model Brand {
   deletedAt DateTime?
 }
 
+model BrandCategories {
+  id         Int          @id @default(autoincrement())
+  brandId    Int
+  categoryId Int
+  // brand      Brand        @relation(fields: [brandId], references: [id])
+  // category   ItemCategory @relation(fields: [categoryId], references: [id])
+
+  // @@id([brandId, categoryId]) // Composite primary key
+}
+
 model Favorite {
   id        Int      @id @default(autoincrement())
   userId    Int

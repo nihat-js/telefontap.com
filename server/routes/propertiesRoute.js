@@ -6,13 +6,13 @@ const router = express.Router()
 
 router.get("/cities", getCities)
 router.get("/countries", getCountries)
-router.get("/brand", getBrands)
+router.get("/phone-brands", getPhoneBrands)
 router.get("/phone/:modelName", getPhoneModelsByBrand)
 router.get("/phone/:modelName/spces ", getPhoneModelSpecs)
 
 
-function getCities(){
-  
+function getCities() {
+
 }
 
 router.get("/phone-models/:modelName", function (req, res) {
