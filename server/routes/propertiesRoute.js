@@ -11,6 +11,10 @@ router.get("/phone/:modelName", getPhoneModelsByBrand)
 router.get("/phone/:modelName/spces ", getPhoneModelSpecs)
 
 
+function getCities(){
+  
+}
+
 router.get("/phone-models/:modelName", function (req, res) {
   const brand = req.body
   await prisma.phoneSpec.findMany({
