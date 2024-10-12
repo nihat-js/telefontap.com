@@ -13,7 +13,10 @@ model Admin {
 
 enum AdminRole {
   MANAGER
+  DEVELOPER       
   MODERATOR
+  VIEWER
+  
 }
 
 model AdminAction {

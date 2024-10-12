@@ -11,6 +11,28 @@ router.get("/phone/:modelName", getPhoneModelsByBrand)
 router.get("/phone/:modelName/spces ", getPhoneModelSpecs)
 
 
+// 1 Telefonlar
+  // Tablet
+
+// 2 Aksesuarlar
+  // 3 Qulaqciq
+    // 4 Naqilli
+    // 5 Naqilsiz
+// 6
+// 7 
+// 8 
+// 9 
+
+phoneBrands,televisorlarin,motosikletler, qulaqciqlarin
+
+
+function phoneBrands(){
+
+}
+function carBrands(){
+
+}
+
 function getCities() {
 
 }

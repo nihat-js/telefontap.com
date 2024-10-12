@@ -1,35 +1,123 @@
+// Telefonlar
+// Smart
+// Smart olmayan
+// Kompyuterler
+// Laptop
+// Oyun
+// Ofis
+// Stasionar
+// Aksessuarlar
+// Adapterler
+// Telefon adapteri
+// Type C
+// iphone Lightning
+// Kompyuter Adapteri
+// Diger Adapterler
+
+// enum Category {
+//   PHONE
+//   TABLET
+//   LAPTOP
+//   PC
+//   SMART_TV
+//   SMARTWATCH
+//   CAMERA
+//   SMART_HOME_DEVICE
+//   PRINTER
+//   KEYBOARD
+//   MONITOR
+//   MOUSE
+//   CABLES_AND_ADAPTERS
+// }
+// plansetleri redd ele getsin
+// telefonlar, qulaqciqlar, mouselar, televizoarlar
+model Category {
+  id             Int        @id @default(autoincrement())
+  name           String
+  parentId       Int?
+  parentCategory Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  subcategories  Category[] @relation("CategoryHierarchy")
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+  BrandCategories BrandCategories[]
+}
+
+model Brand {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+  BrandCategories BrandCategories[]
+}
+
+model BrandCategory {
+  id         Int    @id @default(autoincrement())
+  brandId    Int
+  brand      String
+  categoryId Int
+  category   String
+}
+
+// model Tags {
+//   id Int @id @default(autoincrement())
+// }
+
+// model Car {
+//   id             Int    @id @default(autoincrement())
+//   engineCapacity Float
+//   oilType        String
+// }
+
+enum ItemStatus {
+  IN_REVIEW
+  PUBLISHED
+  ARCHIEVED
+  DRAFT
+  SUSPENDED
+  EXPIRED
+  REJECTED
+  SCHEDULED
+  DELETED
+  MODIFIED
+}
+
 model Item {
   id          Int     @id @default(autoincrement())
   category    String? // Consider using a relation to a Category model for better organization
-  brand       String
+  categoryId  String?
+  brand       String?
   brandId     Int? // @relation(fields: [brandId], references: [id]) // Ensure foreign key relation if there's a Brand model
-  model       String
+  model       String?
   modelId     Int? // @relation(fields: [modelId], references: [id]) // Same for Model, if applicable
   color       String?
   price       Float
   description String?
   userId      Int
   user        User    @relation(fields: [userId], references: [id]) // Relation to User model
-  //optional
-  storageInGB Int?
-  ramInGB     Int?
+
+  status ItemStatus @default(IN_REVIEW)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  images        ItemImage[] // @relation("ItemImages") // Ensure correct naming for the relation
-  favorites     Favorite[] // @relation("ItemFavorites") // Correct naming for favorites
-  favoriteCount Int         @default(0)
-  viewCount     Int         @default(0)
+  images             ItemImage[] // @relation("ItemImages") // Ensure correct naming for the relation
+  favorites          Favorite[] // @relation("ItemFavorites") // Correct naming for favorites
+  favoritedCount     Int         @default(0)
+  viewCount          Int         @default(0)
+  contactPhoneNumber String?
 
   // Add additional fields if necessary
-  condition ItemCondition // e.g., "new", "used"
-  cityId    Int?
-  city      City?         @relation(fields: [cityId], references: [id])
-  countryId Int?
-  country   Country?      @relation(fields: [countryId], references: [id])
-  warranty  String? // Optional warranty information
+  condition    ItemCondition // e.g., "new", "used"
+  cityId       Int?
+  city         City?          @relation(fields: [cityId], references: [id])
+  countryId    Int?
+  country      Country?       @relation(fields: [countryId], references: [id])
+  warranty     String? // Optional warranty information
+  ItemProperty ItemProperty[]
 }
 
 enum ItemCondition {
@@ -37,13 +125,24 @@ enum ItemCondition {
   USED
 }
 
-model ItemProperty {
-  id        Int    @id @default(autoincrement())
-  productId Int
-  key       String // e.g., "color", "storage"
-  value     String // e.g., "black", "64GB"
+// enum ItemPropertyKeys {
+//   RAM_IN_GB
+//   STORAGE_IN_GB
+//   IS_ESIM_OPEN
+//   CAR_ENGINE_CAPACITY
+//   HAVE_INSURANCE
+//   HAVE_HAD_ACCIDENT
+// }
 
-  // item Item @relation(fields: [productId], references: [id])
+//  storageInGB Int?
+//   ramInGB     Int?
+model ItemProperty {
+  id    Int    @id @default(autoincrement())
+  key   String // e.g., "ram","storage"
+  value String
+
+  itemId Int
+  item   Item @relation(fields: [itemId], references: [id])
 }
 
 model ItemImage {
@@ -63,21 +162,13 @@ model ItemImage {
   Item       Item? @relation(fields: [itemId], references: [id])
 }
 
-model Brand {
-  id   Int    @id @default(autoincrement())
-  name String
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-}
-
 model BrandCategories {
-  id         Int          @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   brandId    Int
   categoryId Int
-  // brand      Brand        @relation(fields: [brandId], references: [id])
-  // category   ItemCategory @relation(fields: [categoryId], references: [id])
+  // qalsins sonraya denormalization
+  brand      Brand    @relation(fields: [brandId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
 
   // @@id([brandId, categoryId]) // Composite primary key
 }
@@ -90,20 +181,4 @@ model Favorite {
 
   user User @relation(fields: [userId], references: [id])
   Item Item @relation(fields: [itemId], references: [id])
-}
-
-enum ItemCategory {
-  PHONE
-  TABLET
-  LAPTOP
-  PC
-  SMART_TV
-  SMARTWATCH
-  CAMERA
-  SMART_HOME_DEVICE
-  PRINTER
-  KEYBOARD
-  MONITOR
-  MOUSE
-  CABLES_AND_ADAPTERS
 }
