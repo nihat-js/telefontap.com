@@ -4,6 +4,8 @@ const categories = require("../../../data/categories.json")
 const countries = require("../../../data/countries.json")
 const phoneBrands = require("../../../data/phoneBrands.json")
 const azerbaijanCities = require("../../../data/azerbaijanCities.json")
+const sampleUsers = require("../../../data/sampleUsers.json")
+const sampleAdmins = require("../../../data/sampleAdmins.json")
 
 // const countries = require("../../../data/countries.json")
 // const phoneModels = require("../../../data/phoneModels.json")
@@ -94,12 +96,22 @@ async function seedAzerbaijaniCities() {
   console.log(`Seeded Azerbaijani cities. Result count: ${result.count}`)
 }
 
+async function seedSampleUsers() {
+  let result = await prisma.user.createMany({
+    data: sampleUsers,
+    skipDuplicates: true,
+  })
+  console.log(`Seeded  users. Result count: ${result.count}`)
+}
+
 
 async function seedSampleAdmin() {
-
+  let result = await prisma.admin.createMany({
+    data: sampleUsers,
+    skipDuplicates: true
+  })
+  console.log(`Seeded  admins. Result count: ${result.count}`)
 }
 
-async function seedSampleUsers() {
 
-}
 
