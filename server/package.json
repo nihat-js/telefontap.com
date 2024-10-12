@@ -4,7 +4,8 @@
     "dev": "node --watch --env-file=.env --inspect app.js ",
     "test": "npx mocha tests/*",
     "prod": "npx prod",
-    "seed:default": "node prisma/seeders/default.js"
+    "seed": "node prisma/seeders/default.js",
+    "seed:reset": "prisma migrate reset && prisma migrate dev --name=dev  &&  node prisma/seeders/default.js"
   },
   "dependencies": {
     "@faker-js/faker": "^9.0.3",

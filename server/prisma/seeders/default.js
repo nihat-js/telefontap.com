@@ -1,18 +1,22 @@
 const prisma = require("../../config/db")
 
 const categories = require("../../../data/categories.json")
+const countries = require("../../../data/countries.json")
 const phoneBrands = require("../../../data/phoneBrands.json")
+const azerbaijanCities = require("../../../data/azerbaijanCities.json")
 
 // const countries = require("../../../data/countries.json")
-// const cities = require("../../../data/cities.json")
 // const phoneModels = require("../../../data/phoneModels.json")
 
 
 async function run() {
   await seedCategories()
   await seedPhoneBrands()
-  await seedCountries() // empty
-  await seedCities()
+  await seedCountries() // only az
+  await seedAzerbaijaniCities()
+
+  await seedSampleUsers()
+  await seedSampleAdmin()
 
 }
 
@@ -38,18 +42,20 @@ async function seedPhoneBrands() {
   console.log(`Seeded brands. Result count: ${result.count}`)
 
   let brandsWithIds = await prisma.brand.findMany()
-  let categoryPhoneId = await prisma.category.findFirst({ where: { name: "phone" } })
+  let categoryPhone = await prisma.category.findFirst({ where: { name: "phone" } })
   // console.log({ brandsWithIds, phoneBrands })
 
   let phoneBrandsWithCategoryIds = formattedPhoneBrands.map((item) => {
     // let brandId
     return {
       brandId: brandsWithIds.find(item2 => item.name == item2.name).id,
-      categoryId: categoryPhoneId.id,
+      brandName: brandsWithIds.find(item2 => item.name == item2.name).name,
+      categoryId: categoryPhone.id,
+      categoryName: categoryPhone.name,
     }
   })
 
-  let result2 = await prisma.brandCategories.createMany({
+  let result2 = await prisma.brandCategory.createMany({
     data: phoneBrandsWithCategoryIds,
     skipDuplicates: true,
   })
@@ -62,11 +68,38 @@ async function seedPhoneBrands() {
 
 
 async function seedCountries() {
+  let result = await prisma.country.createMany({
+    skipDuplicates: true,
+    data: countries
+  })
+  console.log(`Seeded countries. Result count: ${result.count}`)
+}
+
+async function seedAzerbaijaniCities() {
+  let azerbaijan = await prisma.country.findFirst({
+    where: { code: "az" }
+  })
+  let formattedCities = azerbaijanCities.map(item => {
+    return {
+      name: item,
+      countryId: azerbaijan.id,
+      countryCode: "az"
+    }
+  })
+
+  let result = await prisma.city.createMany({
+    skipDuplicates: true,
+    data: formattedCities
+  })
+  console.log(`Seeded Azerbaijani cities. Result count: ${result.count}`)
+}
+
+
+async function seedSampleAdmin() {
 
 }
 
-async function seedCities() {
+async function seedSampleUsers() {
 
 }
-
 

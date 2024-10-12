@@ -4,7 +4,7 @@ CREATE TABLE `Admin` (
     `name` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
-    `role` ENUM('MANAGER', 'MODERATOR') NOT NULL DEFAULT 'MANAGER',
+    `role` ENUM('MANAGER', 'DEVELOPER', 'MODERATOR', 'VIEWER') NOT NULL DEFAULT 'MANAGER',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -36,25 +36,66 @@ CREATE TABLE `Message` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `Category` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `parentId` INTEGER NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `deletedAt` DATETIME(3) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Brand` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `deletedAt` DATETIME(3) NULL,
+
+    UNIQUE INDEX `Brand_name_key`(`name`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `BrandCategory` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `brandId` INTEGER NOT NULL,
+    `brandName` VARCHAR(191) NOT NULL,
+    `categoryId` INTEGER NOT NULL,
+    `categoryName` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `BrandCategory_brandId_categoryId_key`(`brandId`, `categoryId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Item` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `category` VARCHAR(191) NULL,
-    `brand` VARCHAR(191) NOT NULL,
+    `categoryId` VARCHAR(191) NULL,
+    `brand` VARCHAR(191) NULL,
     `brandId` INTEGER NULL,
-    `model` VARCHAR(191) NOT NULL,
+    `model` VARCHAR(191) NULL,
     `modelId` INTEGER NULL,
     `color` VARCHAR(191) NULL,
     `price` DOUBLE NOT NULL,
     `description` VARCHAR(191) NULL,
     `userId` INTEGER NOT NULL,
-    `storageInGB` INTEGER NULL,
-    `ramInGB` INTEGER NULL,
+    `status` ENUM('IN_REVIEW', 'PUBLISHED', 'ARCHIEVED', 'DRAFT', 'SUSPENDED', 'EXPIRED', 'REJECTED', 'SCHEDULED', 'DELETED', 'MODIFIED') NOT NULL DEFAULT 'IN_REVIEW',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `deletedAt` DATETIME(3) NULL,
+    `favoritedCount` INTEGER NOT NULL DEFAULT 0,
+    `viewCount` INTEGER NOT NULL DEFAULT 0,
+    `contactPhoneNumber` VARCHAR(191) NULL,
     `condition` ENUM('NEW', 'USED') NOT NULL,
     `cityId` INTEGER NULL,
+    `cityName` VARCHAR(191) NULL,
     `countryId` INTEGER NULL,
+    `countryName` VARCHAR(191) NULL,
     `warranty` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
@@ -63,9 +104,9 @@ CREATE TABLE `Item` (
 -- CreateTable
 CREATE TABLE `ItemProperty` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `productId` INTEGER NOT NULL,
     `key` VARCHAR(191) NOT NULL,
     `value` VARCHAR(191) NOT NULL,
+    `itemId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -86,12 +127,10 @@ CREATE TABLE `ItemImage` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Brand` (
+CREATE TABLE `BrandCategories` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(191) NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-    `deletedAt` DATETIME(3) NULL,
+    `brandId` INTEGER NOT NULL,
+    `categoryId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -109,13 +148,18 @@ CREATE TABLE `Favorite` (
 -- CreateTable
 CREATE TABLE `PhoneSpec` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `brand` VARCHAR(191) NOT NULL,
-    `model` VARCHAR(191) NOT NULL,
-    `ramInGB` INTEGER NULL,
-    `batteryCapacity` INTEGER NULL,
-    `screenSize` DOUBLE NULL,
-    `operatingSystem` VARCHAR(191) NULL,
-    `releaseYear` INTEGER NULL,
+    `brand` VARCHAR(191) NULL,
+    `brandId` INTEGER NULL,
+    `model` VARCHAR(191) NULL,
+    `colorOptions` VARCHAR(191) NULL,
+    `releasedIn` VARCHAR(191) NULL,
+    `dimensions` VARCHAR(191) NULL,
+    `weight` VARCHAR(191) NULL,
+    `storageOptions` VARCHAR(191) NULL,
+    `decsription` VARCHAR(191) NULL,
+    `battery` VARCHAR(191) NULL,
+    `benchmarkResults` VARCHAR(191) NULL,
+    `sensors` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -155,8 +199,10 @@ CREATE TABLE `Country` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `code` VARCHAR(191) NOT NULL,
+    `phoneCode` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `deletedAt` DATETIME(3) NULL,
 
     UNIQUE INDEX `Country_name_key`(`name`),
     UNIQUE INDEX `Country_code_key`(`code`),
@@ -167,9 +213,11 @@ CREATE TABLE `Country` (
 CREATE TABLE `City` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `countryId` INTEGER NOT NULL,
+    `countryId` INTEGER NULL,
+    `countryCode` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `deletedAt` DATETIME(3) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -288,6 +336,9 @@ CREATE TABLE `SearchHistory` (
 ALTER TABLE `AdminAction` ADD CONSTRAINT `AdminAction_adminId_fkey` FOREIGN KEY (`adminId`) REFERENCES `Admin`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Category` ADD CONSTRAINT `Category_parentId_fkey` FOREIGN KEY (`parentId`) REFERENCES `Category`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Item` ADD CONSTRAINT `Item_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -297,10 +348,19 @@ ALTER TABLE `Item` ADD CONSTRAINT `Item_cityId_fkey` FOREIGN KEY (`cityId`) REFE
 ALTER TABLE `Item` ADD CONSTRAINT `Item_countryId_fkey` FOREIGN KEY (`countryId`) REFERENCES `Country`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `ItemProperty` ADD CONSTRAINT `ItemProperty_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `Item`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `ItemImage` ADD CONSTRAINT `ItemImage_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `ItemImage` ADD CONSTRAINT `ItemImage_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `Item`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `BrandCategories` ADD CONSTRAINT `BrandCategories_brandId_fkey` FOREIGN KEY (`brandId`) REFERENCES `Brand`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `BrandCategories` ADD CONSTRAINT `BrandCategories_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Favorite` ADD CONSTRAINT `Favorite_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -309,7 +369,7 @@ ALTER TABLE `Favorite` ADD CONSTRAINT `Favorite_userId_fkey` FOREIGN KEY (`userI
 ALTER TABLE `Favorite` ADD CONSTRAINT `Favorite_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `Item`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `City` ADD CONSTRAINT `City_countryId_fkey` FOREIGN KEY (`countryId`) REFERENCES `Country`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `City` ADD CONSTRAINT `City_countryId_fkey` FOREIGN KEY (`countryId`) REFERENCES `Country`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `SupportTicket` ADD CONSTRAINT `SupportTicket_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -33,32 +33,36 @@
 // telefonlar, qulaqciqlar, mouselar, televizoarlar
 model Category {
   id             Int        @id @default(autoincrement())
-  name           String
+  name           String     @unique
   parentId       Int?
   parentCategory Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
   subcategories  Category[] @relation("CategoryHierarchy")
 
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  deletedAt       DateTime?
-  BrandCategories BrandCategories[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
+  BrandCategory BrandCategory[]
 }
 
 model Brand {
-  id              Int               @id @default(autoincrement())
-  name            String            @unique
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  deletedAt       DateTime?
-  BrandCategories BrandCategories[]
+  id            Int             @id @default(autoincrement())
+  name          String          @unique
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
+  BrandCategory BrandCategory[]
 }
 
 model BrandCategory {
-  id         Int    @id @default(autoincrement())
-  brandId    Int
-  brand      String
-  categoryId Int
-  category   String
+  brandId      Int
+  categoryId   Int
+  // denormalization
+  brandName    String?
+  categoryName String?
+  brand        Brand    @relation(fields: [brandId], references: [id])
+  category     Category @relation(fields: [categoryId], references: [id])
+
+  @@id([brandId, categoryId]) // Composite primary key
 }
 
 // model Tags {
@@ -111,10 +115,13 @@ model Item {
   contactPhoneNumber String?
 
   // Add additional fields if necessary
-  condition    ItemCondition // e.g., "new", "used"
-  cityId       Int?
+  condition   ItemCondition // e.g., "new", "used"
+  cityId      Int?
+  cityName    String?
+  countryId   Int?
+  countryName String?
+
   city         City?          @relation(fields: [cityId], references: [id])
-  countryId    Int?
   country      Country?       @relation(fields: [countryId], references: [id])
   warranty     String? // Optional warranty information
   ItemProperty ItemProperty[]
@@ -160,17 +167,6 @@ model ItemImage {
   // Listings   Listings? @relation(fields: [listingsId], references: [id])
   listingsId Int?
   Item       Item? @relation(fields: [itemId], references: [id])
-}
-
-model BrandCategories {
-  id         Int      @id @default(autoincrement())
-  brandId    Int
-  categoryId Int
-  // qalsins sonraya denormalization
-  brand      Brand    @relation(fields: [brandId], references: [id])
-  category   Category @relation(fields: [categoryId], references: [id])
-
-  // @@id([brandId, categoryId]) // Composite primary key
 }
 
 model Favorite {
