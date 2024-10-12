@@ -19,6 +19,8 @@ async function run() {
 
   await seedSampleUsers()
   await seedSampleAdmin()
+  await seedPhoneSpecs()
+  await seedPhoneItems()
 
 }
 
@@ -115,3 +117,10 @@ async function seedSampleAdmin() {
 
 
 
+
+function seedPhoneSpecs() {
+  
+}
+function seedPhoneItems() {
+  
+}

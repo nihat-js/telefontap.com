@@ -5,6 +5,16 @@ const ONE_DAY_MS = 24 * ONE_HOUR_MS
 const DEFAULT_TOKEN_LIFESPAN_MS = 14 * ONE_DAY_MS
 const RESET_PASSWORD_CODE_LIFESPAN = ONE_HOUR_MS
 
+const ENVIRONMENT = {
+  CURRENT: process.NODE_ENV || "development",
+  DEVELOPMENT: "development",
+  TESTING: "testing",
+  STATGING: "staging",
+  PRODUCTION: "production",
+}
+
+
+
 const EMAIL_VERIFICATION = {
   EXPIRY_TIME_MINUTES: 30, // Expiry time for verification links
   ATTEMPTS_LIMIT: 3, // Max attempts for email verification
@@ -113,24 +123,15 @@ const NOTIFICATION_FREQUENCY = {
 };
 
 const API_KEYS = {
-  GOOGLE_MAPS_API_KEY: "A",
-  STRIPE_API_KEY: "b",
+  GOOGLE_MAPS_API_KEY: "your-google-maps-api-key",
+  STRIPE_API_KEY: "your-stripe-api-key",
 }
 
-const GOOGLE_MAPS_API_KEY = 'your-google-maps-api-key'; // API key for Google Maps
-const STRIPE_API_KEY = 'your-stripe-api-key'; // API key for Stripe payment processing
 
 const USER_ROLE_ADMIN = 'admin'; // Role for admin users
 const USER_ROLE_MEMBER = 'member'; // Role for regular members
 const USER_ROLE_GUEST = 'guest'; // Role for guest users
 
-const ENVIRONMENT = {
-  CURRENT: process.NODE_ENV || "development",
-  DEVELOPMENT: "development",
-  TESTING: "testing",
-  STATGING: "staging",
-  PRODUCTION: "production",
-}
 
 
 const DEFAULT_LANGUAGE = "en"

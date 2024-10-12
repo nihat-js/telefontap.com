@@ -9,6 +9,7 @@ const Busboy = require('busboy');
 const app = express()
 const { useLimiter } = require("./middlewares/limiters")
 const authRoute = require("./routes/authRoute");
+const propertiesRoutes = require("./routes/propertiesRoutes");
 const { API_VERSIONING, ENVIRONMENT } = require("./config/constants");
 const { Server } = require("socket.io")
 const http = require("http");
@@ -24,11 +25,13 @@ const fs = require("fs")
 // const io = require("socket.io")(require("http").createServer())
 
 
+if (ENVIRONMENT.CURRENT == ENVIRONMENT.DEVELOPMENT) {
+  app.use(logger('dev'));
 
+}
 app.use(express.json())
-app.use(logger('dev'));
 app.use(express.static("uploads"))
-// app.use(useLimiter)
+app.use(useLimiter)
 app.use(function (req, res, next) {
   res.set("X-Powered-By", "ASP.NET")
   next()
@@ -43,7 +46,10 @@ app.get("/test", function (req, res) {
   })
 })
 
-app.use("/api/" + API_VERSIONING.CURRENT_VERSION + "/auth/", authRoute)
+const APIT_ROUTE_PATH = "/api/" + API_VERSIONING.CURRENT_VERSION
+
+app.use(APIT_ROUTE_PATH + "/auth/", authRoute)
+app.use(APIT_ROUTE_PATH + "/properties/", propertiesRoutes)
 
 
 
