@@ -15,14 +15,21 @@ const ENVIRONMENT = {
 
 
 
+
+
+const FILE_UPLOAD_SETTINGS = {
+  MAX_FILES: 10,
+  MAX_SIZE_MB: 5,
+
+  ALLOWED_IMAGE_TYPES: ["image/jpeg", "image/png", "image/gif"],
+  UPLOAD_DIRECTORY: "uploads",
+  IMAGE_COMPRESSION_QUALITY: 80,
+  MAX_FILE_NAME_LENGTH: 255,/
+};
+
 const EMAIL_VERIFICATION = {
   EXPIRY_TIME_MINUTES: 30, // Expiry time for verification links
   ATTEMPTS_LIMIT: 3, // Max attempts for email verification
-};
-
-const FILE_UPLOAD_SETTINGS = {
-  MAX_FILES: 10, // Maximum number of files
-  MAX_SIZE_MB: 5, // Maximum size per file in MB
 };
 
 const AUDIT_LOG_LEVELS = {
@@ -49,6 +56,7 @@ const SECURITY_TOKEN_SETTINGS = {
 
 const SUBSCRIPTION_PLANS = {
   FREE: { price: 0, features: ['Basic Support', 'Limited Features'] },
+  TRIAL: { price: 0, features: ['Basic Support with', 'Limited Features with'] },
   PREMIUM: { price: 9.99, features: ['Priority Support', 'Full Features'] },
   ENTERPRISE: { price: 49.99, features: ['Dedicated Support', 'Custom Features'] },
 };
@@ -59,12 +67,6 @@ const DATA_RETENTION_POLICY = {
 };
 
 
-const MAX_IMAGE_UPLOAD_COUNT = 10
-const MAX_IMAGE_SIZE_BYTES = 4 * 1024 * 1024
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif"]
-const UPLOAD_DIRECTORY = "uploads"
-const IMAGE_COMPRESSION_QUALITY = 80
-const MAX_FILE_NAME_LENGTH = 255; // Maximum length for uploaded file names
 
 const LOG_LEVEL = "info" // (debug,info,warn,,error)
 const ALLOWED_ORIGINS = ['http://example.com', 'http://localhost:3000']; // Allowed origins for CORS
@@ -73,13 +75,16 @@ const BACKUP_RETENTION_DAYS = 7; // Number of days to keep backups
 const MAINTENANCE_MODE = false; // Flag to indicate if the application is in maintenance mode
 
 
+const PAYMENT_OPTIONS = {
+  GATEWAY_URL: 'https://api.paymentgateway.com',
+  TIMEOUT_MS: 30000,
+  RETRY_LIMIT: 3,
+  RETRY_INTERVAL: 60000,
+  DEFAULT_CURRENCY: 'AZN',
+}
+
 
 // payment
-const PAYMENT_GATEWAY_URL = 'https://api.paymentgateway.com'; // Payment gateway URL
-const PAYMENT_TIMEOUT_MS = 30000
-const PAYMENT_RETRY_LIMIT = 3
-const PAYMENT_RETRY_INTERVAL = 60000
-const DEFAULT_CURRENCY = 'AZN'; // Default currency for transactions
 
 
 const ANALYTICS_TRACKING_ID = "UA-XXXXXXXXXX-X"
@@ -93,8 +98,6 @@ const VALIDATION_POLICY = {
   }
 }
 
-const PASSWORD_MIN_LENGTH = 8
-const MAX_LOGIN_ATTEMPTS = 5
 
 const WEBSOCKET_URL = 'wss://example.com/socket'; // WebSocket connection URL
 const WEBSOCKET_RECONNECT_INTERVAL_MS = 5000;
@@ -138,8 +141,11 @@ const DEFAULT_LANGUAGE = "en"
 const DEFAULT_TIMEZONE = "UTC"
 const SEARCH_RESULTS_PER_PAGE = 10
 
-const CACHE_EXPIRATION_TIME = 300
-const CACHE_MAX_SIZE = 100
+
+const CACHE_SETTINGS = {
+  CACHE_EXPIRATION_TIME: 300,
+  MAX_SIZE_MB: 1000
+}
 
 
 const EMAIL_TEMPLATES = {
@@ -254,10 +260,6 @@ const DASHBOARD_CONFIG = {
   REFRESH_INTERVAL_SECONDS: 60, // Refresh interval for dashboard data
 };
 
-const USER_SUBSCRIPTION = {
-  TRIAL_PERIOD_DAYS: 14, // Duration of the trial period in days
-  MAX_SUBSCRIPTION_PLANS: 3, // Maximum number of subscription plans
-};
 
 const PRODUCT_SEARCH = {
   ENABLE_AUTOCOMPLETE: true, // Enable autocomplete in search

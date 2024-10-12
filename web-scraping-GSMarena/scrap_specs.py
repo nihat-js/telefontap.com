@@ -29,9 +29,18 @@ headers = {
 def get_specs(html,index):
     soup = BeautifulSoup(html.content,'lxml')
     name1 = soup.find('h1',{'data-spec':'modelname'}).get_text()
-    released1 = soup.find("td", {"data-spec" : "status"}).get_text()
+    brand1 = name1[:name1.find(" ")]
+    name1 = name1[name1.find(" "): len(name1) ]
+
+    released1 = soup.find("td", {"data-spec" : "year"}).get_text()
+    released1 = released1[:released1.find(".")].strip() 
+
+
     dimension1 = soup.find("td", {"data-spec" : "dimensions"}).get_text()
+    dimension1 = dimension1[:dimension1.find("(")].strip() # removing extra data 123.8 x 58.6 x 7.6 mm (4.87 x 2.31 x 0.30 in)
+
     weight1 = soup.find("td", {"data-spec" : "weight"}).get_text()
+    weight1 = weight1[:weight1.find("(")].strip() 
     # col_names_html = soup.select('#specs-list td.ttl')
     # col_names = []
     # for col_name in col_names_html:
@@ -76,7 +85,7 @@ def get_specs(html,index):
     # Memory
     # memoryslot1 = soup.find("td", {"data-spec" : "memoryslot"})
     # memoryslot.append(None) if memoryslot1 is None else memoryslot.append(memoryslot1.get_text())
-    # internalmemory1 = soup.find("td", {"data-spec" : "internalmemory"})
+    internalmemory1 = soup.find("td", {"data-spec" : "internalmemory"})
     # internalmemory.append(None) if internalmemory1 is None else internalmemory.append(internalmemory1.get_text())
     # Camera
     # cam1modules1 = soup.find("td", {"data-spec" : "cam1modules"})
@@ -146,7 +155,7 @@ def get_specs(html,index):
     # review_url = soup.select('li.article-info-meta-link.article-info-meta-link-review.light.large.help.help-review a')
 
 
-    text = f",{name1},{released1},{dimension1},{weight1}"
+    text = f"{brand1},{name1},{released1},{dimension1},{weight1}"
     return text
     # if review_url is None or review_url==[]:
     #     review.append(None)
