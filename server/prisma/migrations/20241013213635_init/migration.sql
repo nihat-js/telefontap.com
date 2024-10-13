@@ -44,6 +44,7 @@ CREATE TABLE `Category` (
     `updatedAt` DATETIME(3) NOT NULL,
     `deletedAt` DATETIME(3) NULL,
 
+    UNIQUE INDEX `Category_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -61,14 +62,12 @@ CREATE TABLE `Brand` (
 
 -- CreateTable
 CREATE TABLE `BrandCategory` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `brandId` INTEGER NOT NULL,
-    `brandName` VARCHAR(191) NOT NULL,
     `categoryId` INTEGER NOT NULL,
-    `categoryName` VARCHAR(191) NOT NULL,
+    `brandName` VARCHAR(191) NULL,
+    `categoryName` VARCHAR(191) NULL,
 
-    UNIQUE INDEX `BrandCategory_brandId_categoryId_key`(`brandId`, `categoryId`),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`brandId`, `categoryId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -127,15 +126,6 @@ CREATE TABLE `ItemImage` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `BrandCategories` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `brandId` INTEGER NOT NULL,
-    `categoryId` INTEGER NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `Favorite` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
@@ -148,19 +138,30 @@ CREATE TABLE `Favorite` (
 -- CreateTable
 CREATE TABLE `PhoneSpec` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `brand` VARCHAR(191) NULL,
+    `brandName` VARCHAR(191) NULL,
     `brandId` INTEGER NULL,
-    `model` VARCHAR(191) NULL,
-    `colorOptions` VARCHAR(191) NULL,
-    `releasedIn` VARCHAR(191) NULL,
+    `model` VARCHAR(191) NOT NULL,
     `dimensions` VARCHAR(191) NULL,
     `weight` VARCHAR(191) NULL,
-    `storageOptions` VARCHAR(191) NULL,
-    `decsription` VARCHAR(191) NULL,
-    `battery` VARCHAR(191) NULL,
-    `benchmarkResults` VARCHAR(191) NULL,
+    `displayType` VARCHAR(191) NULL,
+    `displaySize` VARCHAR(191) NULL,
+    `displayResolution` VARCHAR(191) NULL,
+    `operatingSystem` VARCHAR(191) NULL,
+    `chipset` VARCHAR(191) NULL,
+    `CPU` VARCHAR(191) NULL,
+    `GPU` VARCHAR(191) NULL,
+    `batteryType` VARCHAR(191) NULL,
+    `rearCameras` VARCHAR(191) NULL,
+    `frontCameras` VARCHAR(191) NULL,
+    `internalMemoryOptions` VARCHAR(191) NULL,
+    `colorOptions` VARCHAR(191) NULL,
+    `description` VARCHAR(191) NULL,
+    `releaseDate` VARCHAR(191) NULL,
+    `benchmarks` VARCHAR(191) NULL,
     `sensors` VARCHAR(191) NULL,
+    `status` ENUM('ACTIVE', 'IN_ACTIVE') NOT NULL DEFAULT 'ACTIVE',
 
+    UNIQUE INDEX `PhoneSpec_brandId_model_key`(`brandId`, `model`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -219,6 +220,7 @@ CREATE TABLE `City` (
     `updatedAt` DATETIME(3) NOT NULL,
     `deletedAt` DATETIME(3) NULL,
 
+    UNIQUE INDEX `City_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -339,6 +341,12 @@ ALTER TABLE `AdminAction` ADD CONSTRAINT `AdminAction_adminId_fkey` FOREIGN KEY 
 ALTER TABLE `Category` ADD CONSTRAINT `Category_parentId_fkey` FOREIGN KEY (`parentId`) REFERENCES `Category`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `BrandCategory` ADD CONSTRAINT `BrandCategory_brandId_fkey` FOREIGN KEY (`brandId`) REFERENCES `Brand`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `BrandCategory` ADD CONSTRAINT `BrandCategory_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Item` ADD CONSTRAINT `Item_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -355,12 +363,6 @@ ALTER TABLE `ItemImage` ADD CONSTRAINT `ItemImage_userId_fkey` FOREIGN KEY (`use
 
 -- AddForeignKey
 ALTER TABLE `ItemImage` ADD CONSTRAINT `ItemImage_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `Item`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `BrandCategories` ADD CONSTRAINT `BrandCategories_brandId_fkey` FOREIGN KEY (`brandId`) REFERENCES `Brand`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `BrandCategories` ADD CONSTRAINT `BrandCategories_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Favorite` ADD CONSTRAINT `Favorite_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

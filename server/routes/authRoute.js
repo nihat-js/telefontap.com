@@ -32,7 +32,7 @@ function social() {
   // admin.SDK_VERSION
 }
 
-function loginWithPhoneNumber(){
+function loginWithPhoneNumber() {
 
   //send 4 digit code
 }
@@ -152,6 +152,34 @@ async function resetPassword() {
 
 async function changePassword() {
 
+  const { oldPassword, newPassword } = req.body;
+
+  if (!userId || !oldPassword || !newPassword) {
+    return res.status(400).json({ message: 'All fields are required.' });
+  }
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Old password is incorrect.' });
+    }
+
+    const hashedPassword = await hashPassword(newPassword)
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
+    res.status(200).json({ message: 'Password changed successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
 }
 
 async function logout(req, res) {

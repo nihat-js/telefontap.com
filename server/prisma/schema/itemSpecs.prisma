@@ -1,19 +1,38 @@
 model PhoneSpec {
-  id               Int     @id @default(autoincrement())
-  brand            String?
-  brandId          Int?
-  model            String?
-  colorOptions     String?
-  releasedIn       String? // 
-  dimensions       String?
-  weight           String?
-  storageOptions   String?
-  decsription      String?
-  battery          String?
-  benchmarkResults String?
-  sensors          String?
+  id                    Int     @id @default(autoincrement())
+  brandName             String?
+  brandId               Int?
+  model                 String
+  dimensions            String?
+  weight                String?
+  displayType           String?
+  displaySize           String?
+  displayResolution     String?
+  operatingSystem       String?
+  chipset               String?
+  CPU                   String?
+  GPU                   String?
+  batteryType           String?
+  rearCameras           String?
+  frontCameras          String?
+  internalMemoryOptions String?
+  colorOptions          String?
+  description           String?
+
+  releaseDate String? // 
+  benchmarks  String?
+  sensors     String?
+
+  status PhoneSpecStatus @default(ACTIVE)
 
   // items Item[]
+
+  @@unique([brandId, model])
+}
+
+enum PhoneSpecStatus {
+  ACTIVE
+  IN_ACTIVE
 }
 
 model LaptopSpecs {

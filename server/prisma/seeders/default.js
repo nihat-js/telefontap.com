@@ -6,6 +6,7 @@ const phoneBrands = require("../../../data/phoneBrands.json")
 const azerbaijanCities = require("../../../data/azerbaijanCities.json")
 const sampleUsers = require("../../../data/sampleUsers.json")
 const sampleAdmins = require("../../../data/sampleAdmins.json")
+let phoneSpecs = require("../../../data/gsmarena/phoneSpecs.json")
 
 // const countries = require("../../../data/countries.json")
 // const phoneModels = require("../../../data/phoneModels.json")
@@ -19,8 +20,36 @@ async function run() {
 
   await seedSampleUsers()
   await seedSampleAdmin()
+
   await seedPhoneSpecs()
-  await seedPhoneItems()
+  // await seedSampleItemsPhone()
+  // await seedSampleUserProfileImages()
+
+  // await seedFavorites()
+  // await seedConversations()
+  // await seedChats()
+
+  // await seedBiddingHistory()
+
+
+  // await seedNotification()
+  // await seedAdBanners()
+  // await seedRecentSearches()
+  // await seedFAQs
+  // await seedDiscountCoupons()
+  // await seedAdminActions()
+  // await seedBannedUsers()
+  // await seedItemTags
+  // await seedContentModerators()
+  // seedUserLoginAttempts()
+  // await seedUserInterests()
+  // seedSellerProfiles()
+
+
+
+
+
+
 
 }
 
@@ -118,9 +147,52 @@ async function seedSampleAdmin() {
 
 
 
-function seedPhoneSpecs() {
-  
+async function seedPhoneSpecs() {
+  let brands = await prisma.brand.findMany()
+
+  let phoneSpecsFormatted = phoneSpecs.map(item => {
+    return {
+      brandName: item.brand,
+      brandId: brands.find(item2 => item2.name == item.brand).id,
+      model: item.model,
+      releaseDate: item.released,
+      dimensions: item.dimension,
+      weight: item.weight,
+
+      displayType: item.display.type,
+      displaySize: item.display.size,
+      displayResolution: item.display.resolution,
+
+      operatingSystem: item.platform.os,
+      chipset: item.platform.chipset,
+      CPU: item.platform.cpu,
+      GPU: item.platform.gpu,
+
+      batteryType: item.battery.type,
+
+      rearCameras: item.mainCamera,
+      frontCameras: item.selfieCamera,
+
+      internalMemoryOptions: item.memoryInternalOptions.join(","),
+      colorOptions: item.colorOptions.join(","),
+      description: "",
+      benchmarks: item.benchmarks,
+      sensors: "",
+
+    }
+
+  })
+
+  let result = await prisma.phoneSpec.createMany({
+    data: phoneSpecsFormatted,
+    skipDuplicates: true
+  })
+  console.log(`Seeded  phone specs. Result count: ${result.count}`)
 }
-function seedPhoneItems() {
-  
+
+async function seedSampleItemsPhone() {
+
+}
+async function seedSampleUserProfileImages() {
+
 }
