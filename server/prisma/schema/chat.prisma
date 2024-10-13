@@ -1,9 +1,124 @@
 model Message {
+  id             Int              @id @default(autoincrement())
+  senderId       Int
+  receiverId     Int
+  listingId      Int
+  content        String
+  createdAt      DateTime         @default(now())
+  isRead         Boolean          @default(false)
+  // Conversation   Conversation? @relation(fields: [conversationId], references: [id])
+  // conversationId Int?
+  Chat           Chat?            @relation(fields: [chatId], references: [id])
+  chatId         Int?
+  ChatAttachment ChatAttachment[]
+  Reaction       Reaction[]
+}
+
+model Chat {
+  id        Int       @id @default(autoincrement())
+  title     String?
+  // participants User[]    @relation("UserConversations")
+  messages  Message[]
+  createdAt DateTime  @default(now())
+}
+
+model ChatAttachment {
+  id        Int      @id @default(autoincrement())
+  messageId Int
+  url       String // URL of the attachment
+  type      String // Type of attachment (e.g., "image", "file")
+  createdAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id])
+}
+
+model FriendRequest {
   id         Int      @id @default(autoincrement())
   senderId   Int
   receiverId Int
-  listingId  Int
-  content    String
+  status     String // Status of the request (e.g., "pending", "accepted", "declined")
   createdAt  DateTime @default(now())
-  isRead     Boolean  @default(false)
+
+  // sender   User @relation("SentRequests", fields: [senderId], references: [id])
+  // receiver User @relation("ReceivedRequests", fields: [receiverId], references: [id])
+}
+
+model Reaction {
+  id        Int      @id @default(autoincrement())
+  messageId Int
+  userId    Int
+  type      String // Type of reaction (e.g., "like", "love", "laugh")
+  createdAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id])
+  // user    User    @relation(fields: [userId], references: [id])
+}
+
+model GroupInvitation {
+  id             Int      @id @default(autoincrement())
+  conversationId Int
+  inviterId      Int
+  inviteeId      Int
+  status         String // Status of the invitation (e.g., "pending", "accepted", "declined")
+  createdAt      DateTime @default(now())
+
+  // inviter      User         @relation("Inviter", fields: [inviterId], references: [id])
+  // invitee      User         @relation("Invitee", fields: [inviteeId], references: [id])
+  // conversation Conversation @relation(fields: [conversationId], references: [id])
+}
+
+model ChatBot {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String? // Description of the chatbot's purpose
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // conversations Conversation[] // Conversations the bot is involved in
+}
+
+model ChatBotResponse {
+  id          Int      @id @default(autoincrement())
+  botId       Int
+  userMessage String // The user's message that triggers the response
+  botMessage  String // The response from the bot
+  createdAt   DateTime @default(now())
+
+  // bot ChatBot @relation(fields: [botId], references: [id])
+}
+
+model Poll {
+  id             Int       @id @default(autoincrement())
+  question       String
+  options        String[] // Array of options for the poll
+  conversationId Int
+  createdAt      DateTime  @default(now())
+  expiresAt      DateTime? // Optional expiration time for the poll
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+}
+
+model PollVote {
+  id             Int      @id @default(autoincrement())
+  pollId         Int
+  userId         Int
+  selectedOption String // The option selected by the user
+  createdAt      DateTime @default(now())
+
+  poll Poll @relation(fields: [pollId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique // Unique name for the tag
+  createdAt DateTime @default(now())
+}
+
+model MessageTag {
+  id        Int @id @default(autoincrement())
+  messageId Int
+  tagId     Int
+
+  message Message @relation(fields: [messageId], references: [id])
+  tag     Tag     @relation(fields: [tagId], references: [id])
 }
