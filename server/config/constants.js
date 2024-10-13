@@ -24,7 +24,7 @@ const FILE_UPLOAD_SETTINGS = {
   ALLOWED_IMAGE_TYPES: ["image/jpeg", "image/png", "image/gif"],
   UPLOAD_DIRECTORY: "uploads",
   IMAGE_COMPRESSION_QUALITY: 80,
-  MAX_FILE_NAME_LENGTH: 255,/
+  MAX_FILE_NAME_LENGTH: 255,
 };
 
 const EMAIL_VERIFICATION = {

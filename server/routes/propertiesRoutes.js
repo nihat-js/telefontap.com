@@ -16,8 +16,8 @@ router.get("/countries/:countryCode/cities", getCities)
 
 
 // Bu ikisi qalibdi gedim data scrape eleyim
-router.get("/phone/:modelName", getPhoneModelsByBrand)
-router.get("/phone/:modelName/spces ", getPhoneModelSpecs)
+router.get("/phones/:brandName", getPhoneModelsByBrand)
+router.get("/phones/:modelName/spces ", getPhoneModelSpecs)
 
 
 
@@ -55,7 +55,17 @@ async function getPhoneBrands(req, res) {
 }
 
 async function getPhoneModelsByBrand(req, res) {
-
+  const brandName = req.params.brandName
+  let result = await prisma.phoneSpec.findMany({
+    where: {
+      brandName
+    },
+    select: {
+      id: true,
+      model: true
+    }
+  })
+  res.status(API_RESPONSE_CODES.SUCCESS).json({ data: result })
 }
 
 async function getPhoneModelSpecs(req, res) {
