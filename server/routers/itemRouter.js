@@ -11,13 +11,12 @@ const router = express.Router();
 
 
 
-router.post("/upload-image", uploadImage)
 router.post("/", createItem)
 router.get("/:id", getItem)
-router.delete(":id/item", deletePhone)
-router.post(":id/promote", promote)
-router.put("/add-to-favorites", addToFavorites)
-router.get('/search', searchItems);
+// router.delete(":id/item", deletePhone)
+// router.post(":id/promote", promote)
+// router.put("/add-to-favorites", addToFavorites)
+// router.get('/search', searchItems);
 
 async function searchItems(req, res) {
   const { category, brand } = req.body
@@ -96,33 +95,6 @@ async function deleteItem() {
 }
 
 
-
-function uploadItemImage(req, res) {
-  const busboy = Busboy({ headers: req.headers });
-
-  let fileData = {};
-
-  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-    const extension = path.extname(filename.toString());
-    const saveTo = path.join("uploads", `${Date.now()}${extension}`);
-
-    fileData.filename = filename;
-    fileData.mimetype = mimetype;
-
-    // Pipe the file to the save location
-    file.pipe(fs.createWriteStream(saveTo));
-  });
-
-  busboy.on('finish', () => {
-    res.json({
-      message: 'File uploaded successfully!',
-      file: fileData,
-    });
-  });
-
-  req.pipe(busboy);
-
-});
 
 
 function getItem() {

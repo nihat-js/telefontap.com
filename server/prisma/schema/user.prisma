@@ -13,21 +13,23 @@ model User {
   status                String    @default("ACTIVE")
   twoFactorEnabled      Boolean   @default(false)
 
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  deletedAt        DateTime?
-  chats            UserChat[]
-  Session          Session[]
-  Favorite         Favorite[]
-  Notification     Notification[]
-  ActvitiyLog      ActvitiyLog[]
-  SearchHistory    SearchHistory[]
-  SupportTicket    SupportTicket[]
-  VerificationCode VerificationCode[]
-  Feedback         Feedback[]
-  ItemImage        ItemImage[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  deletedAt         DateTime?
+  chats             UserChat[]
+  Session           Session[]
+  Favorite          Favorite[]
+  Notification      Notification[]
+  ActvitiyLog       ActvitiyLog[]
+  SearchHistory     SearchHistory[]
+  SupportTicket     SupportTicket[]
+  VerificationCode  VerificationCode[]
+  Feedback          Feedback[]
+  ItemImage         ItemImage[]
   // Transaction      Transaction[]
-  Item             Item[]
+  Item              Item[]
+  UserProfileImage  UserProfileImage[]
+  UserUploadedImage UserUploadedImage[]
 }
 
 model VerificationCode {
@@ -67,22 +69,27 @@ model Session {
 }
 
 model ActvitiyLog {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  action    String // e.g., "LOGIN", "PURCHASE", "LISTING_CREATED"
-  createdAt DateTime @default(now())
+  id     Int    @id @default(autoincrement())
+  userId Int
+  action String // e.g., "LOGIN", "PURCHASE", "LISTING_CREATED"
 
-  user User @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  user      User      @relation(fields: [userId], references: [id])
 }
 
 model Notification {
-  id        Int              @id @default(autoincrement())
-  userId    Int
-  message   String
-  isRead    Boolean          @default(false)
-  createdAt DateTime         @default(now())
-  type      NotificationType
-  metadata  String?
+  id       Int              @id @default(autoincrement())
+  userId   Int
+  message  String
+  isRead   Boolean          @default(false)
+  type     NotificationType
+  metadata String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   User User @relation(fields: [userId], references: [id])
 }
@@ -99,4 +106,25 @@ model SearchHistory {
   createdAt  DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
+}
+
+model UserProfileImage {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  url       String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model UserUploadedImage {
+  id     Int    @id @default(autoincrement())
+  url    String
+  userId Int
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 }

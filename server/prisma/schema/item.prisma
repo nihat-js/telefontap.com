@@ -89,18 +89,19 @@ enum ItemStatus {
 }
 
 model Item {
-  id          Int     @id @default(autoincrement())
-  category    String? // Consider using a relation to a Category model for better organization
-  categoryId  String?
-  brand       String?
-  brandId     Int? // @relation(fields: [brandId], references: [id]) // Ensure foreign key relation if there's a Brand model
-  model       String?
-  modelId     Int? // @relation(fields: [modelId], references: [id]) // Same for Model, if applicable
-  color       String?
-  price       Float
-  description String?
-  userId      Int
-  user        User    @relation(fields: [userId], references: [id]) // Relation to User model
+  id               Int     @id @default(autoincrement())
+  category         String? // Consider using a relation to a Category model for better organization
+  categoryId       String?
+  brand            String?
+  brandId          Int? // @relation(fields: [brandId], references: [id]) // Ensure foreign key relation if there's a Brand model
+  model            String?
+  modelId          Int? // @relation(fields: [modelId], references: [id]) // Same for Model, if applicable
+  color            String?
+  price            Float
+  description      String?
+  userId           Int
+  user             User    @relation(fields: [userId], references: [id]) // Relation to User model
+  isWhatsappActive Boolean @default(false)
 
   status ItemStatus @default(IN_REVIEW)
 

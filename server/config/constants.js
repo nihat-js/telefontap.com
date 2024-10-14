@@ -18,7 +18,7 @@ const ENVIRONMENT = {
 
 
 const FILE_UPLOAD_SETTINGS = {
-  MAX_FILES: 10,
+  MAX_FILES: 3,
   MAX_SIZE_MB: 5,
 
   ALLOWED_IMAGE_TYPES: ["image/jpeg", "image/png", "image/gif"],
@@ -285,5 +285,6 @@ module.exports = {
   API_VERSIONING,
   API_RESPONSE_CODES,
   API_RESPONSE_MESSAGES,
-  ENVIRONMENT
+  ENVIRONMENT,
+  FILE_UPLOAD_SETTINGS
 }
