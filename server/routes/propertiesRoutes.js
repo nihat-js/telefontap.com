@@ -56,14 +56,17 @@ async function getPhoneBrands(req, res) {
 
 async function getPhoneModelsByBrand(req, res) {
   const brandName = req.params.brandName
+  prisma.
   let result = await prisma.phoneSpec.findMany({
+    
     where: {
       brandName
+      
     },
     select: {
       id: true,
       model: true
-    }
+    },
   })
   res.status(API_RESPONSE_CODES.SUCCESS).json({ data: result })
 }

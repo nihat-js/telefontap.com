@@ -16,6 +16,7 @@ model User {
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   deletedAt        DateTime?
+  chats            UserChat[]
   Session          Session[]
   Favorite         Favorite[]
   Notification     Notification[]
@@ -83,7 +84,7 @@ model Notification {
   type      NotificationType
   metadata  String?
 
-  user User @relation(fields: [userId], references: [id])
+  User User @relation(fields: [userId], references: [id])
 }
 
 enum NotificationType {
