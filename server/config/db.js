@@ -2,7 +2,8 @@ const { PrismaClient } = require("@prisma/client")
 
 const prisma = new PrismaClient()
 prisma.$use(async (params, next) => {
-  if (["findMany", "findUnique"].includes(params.action)) {
+  if (["findMany", "findUnique", "findFirst", "update", "updateMany", "delete", "deleteMany"].
+    includes(params.action)) {
 
 
     // Check for a custom flag to include deleted records
