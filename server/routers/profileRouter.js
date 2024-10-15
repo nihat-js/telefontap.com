@@ -2,12 +2,9 @@ const express = require("express")
 
 const router = express.Router()
 
-router.post('/change-password', changePassword);
 router.get('/security-settings', getSecuritySettings);
 router.put('/security-settings', updateSecuritySettings);
 router.get('/activity-log', getActivityLog);
-router.get('/sessions', getUserSessions);
-router.delete('/devices/:deviceId', removeDevice);
 
 
 async function getUserProfile(req, res) {
@@ -38,32 +35,7 @@ async function updateUserProfile(req, res) {
   }
 }
 
-// Change Password
-async function changePassword(req, res) {
-  const userId = req.user.userId;
-  const { oldPassword, newPassword } = req.body;
 
-  try {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-
-    // Add password verification logic (hashing, comparison, etc.)
-    const isValidPassword = /* your password verification logic */;
-
-    if (!isValidPassword) {
-      return res.status(400).json({ message: 'Invalid old password' });
-    }
-
-    // Update password (make sure to hash it before saving)
-    await prisma.user.update({
-      where: { id: userId },
-      data: { password: /* hashed newPassword */ },
-    });
-
-    return res.json({ message: 'Password changed successfully' });
-  } catch (error) {
-    return res.status(500).json({ message: 'Error changing password', error });
-  }
-}
 
 // Get Security Settings
 async function getSecuritySettings(req, res) {

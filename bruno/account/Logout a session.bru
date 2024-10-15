@@ -1,0 +1,11 @@
+meta {
+  name: Logout a session
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{apiURL}}/account/sessions/3
+  body: none
+  auth: none
+}

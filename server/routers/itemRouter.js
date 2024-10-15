@@ -18,6 +18,7 @@ router.get("/:id", getItem)
 // router.put("/add-to-favorites", addToFavorites)
 // router.get('/search', searchItems);
 
+
 async function searchItems(req, res) {
   const { category, brand } = req.body
   const whereClause = {}
@@ -49,7 +50,20 @@ function addToFavorites() {
 
 
 async function createItem(req, res) {
-  const { brand, user } = req.body
+  const {
+    brand,
+    brandID,
+    price,
+    description,
+    storageInGB,
+    conditon,
+    warrantyIncluded,
+    city,
+    country,
+    color,
+    user
+
+  } = req.body
   const newItem = await prisma.item.create({
     data: {
       brand,
@@ -62,16 +76,7 @@ async function createItem(req, res) {
     },
   });
 
-  await prisma.itemImage.updateMany({
-    where: {
-      Item: {
-        userId: user.id
-      }
-    },
-    data: {
-      itemId: newItem.id
-    }
-  })
+  let imageURLS = await prisma.userUploadedImage.findMany({ where: { ma } })
 
   return res.status(201).json(newItem);
 }

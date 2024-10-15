@@ -8,6 +8,7 @@ const fs = require("fs")
 const router = express.Router();
 
 router.post("/", uploadImage)
+router.delete("/:", deleteImage)
 
 
 async function uploadImage(req, res) {
@@ -57,7 +58,7 @@ async function uploadImage(req, res) {
 
 }
 
-async function uploadProfileImage() {
+async function deleteImage() {
 
 }
 
