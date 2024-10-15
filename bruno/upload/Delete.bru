@@ -1,0 +1,15 @@
+meta {
+  name: Delete
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{apiURL}}uploads/9
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  file: @file(D:\User\Gallery\Wallpapers\windows-11-minimal-windows-logo-5k-8k-3840x2160-7381.png)
+}

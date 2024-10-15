@@ -18,11 +18,10 @@ const router = express.Router();
 
 router.post("/register", register)
 router.post("/login", login)
-router.post("/forgot-password", forgotPassword)
-router.post("/logout", logout)
 router.post("/verify-email", verifyEmail)
 router.post("/reset-password", resetPassword)
-router.post("/logout-all-except-me", logoutAllExceptMe)
+// router.post("/logout", logout)
+// router.post("/logout-all-except-me", logoutAllExceptMe)
 
 
 function social() {
@@ -146,61 +145,9 @@ async function login(req, res) {
 async function verifyEmail() {
 
 }
-async function resetPassword() {
 
-}
 
-async function changePassword() {
 
-  const { oldPassword, newPassword } = req.body;
-
-  if (!userId || !oldPassword || !newPassword) {
-    return res.status(400).json({ message: 'All fields are required.' });
-  }
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: 'Old password is incorrect.' });
-    }
-
-    const hashedPassword = await hashPassword(newPassword)
-    await prisma.user.update({
-      where: { id: userId },
-      data: { password: hashedPassword },
-    });
-
-    res.status(200).json({ message: 'Password changed successfully.' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error.' });
-  }
-}
-
-async function logout(req, res) {
-  await prisma.session.deleteMany({
-    where: { userId: req.user.userId }
-  })
-  res.json({ message: "Logged out successfully" })
-}
-
-async function logoutAllExceptMe(req, res) {
-  await prisma.session.deleteMany({
-    where: {
-      userId: req.user.id,
-      NOT: {
-        id: req.cookie("token"),
-      }
-    }
-
-  })
-  res.json({ message: "Logged out successfully" })
-}
 
 
 
@@ -209,7 +156,7 @@ async function logoutAllExceptMe(req, res) {
  * @param {import('express').Response} res
  */
 
-async function forgotPassword(req, res) {
+async function resetPassword(req, res) {
   const { email } = req.body
   if (!email) {
     return res.status(400).json({

@@ -3,19 +3,21 @@ const express = require("express");
 const prisma = require("../config/db");
 const { API_RESPONSE_CODES, FILE_UPLOAD_SETTINGS } = require("../config/constants");
 const path = require("path")
-const fs = require("fs")
+const fsPromises = require('fs').promises;
+const fs = require('fs');
+
 
 const router = express.Router();
 
+router.get("/", getAll)
 router.post("/", uploadImage)
-router.delete("/:", deleteImage)
+router.delete("/:imageId", deleteImage)
 
 
 async function uploadImage(req, res) {
-  const userId = 1
   let result = await prisma.userUploadedImage.count({
     where: {
-      userId
+      userId: req.user.id
     }
   })
 
@@ -26,10 +28,12 @@ async function uploadImage(req, res) {
   const busboy = Busboy({ headers: req.headers });
 
   let fileData = {}
+  let newName
 
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
     const extension = path.extname(filename.filename);
-    const saveTo = path.join("uploads", `${Date.now()}${extension}`);
+    newName = Date.now() + extension
+    const saveTo = path.join("uploads", newName);
 
     fileData.filename = filename;
     fileData.mimetype = mimetype;
@@ -42,8 +46,8 @@ async function uploadImage(req, res) {
   busboy.on('finish', async () => {
     let result = await prisma.userUploadedImage.create({
       data: {
-        url: fileData.filename.filename,
-        userId: userId
+        url: newName,
+        userId: req.user.id
       }
     })
 
@@ -58,8 +62,41 @@ async function uploadImage(req, res) {
 
 }
 
-async function deleteImage() {
+async function deleteImage(req, res) {
+  let result = await prisma.userUploadedImage.findUnique({
+    where: {
+      id: +req.params.imageId,
+      userId: req.user.id
+    }
+  })
+  // console.log({ result })
+  if (!result) {
+    return res.status(API_RESPONSE_CODES.BAD_REQUEST).send()
+  }
 
+  fs.rmSync(path.join(__dirname, "../uploads", result.url))
+  await prisma.userUploadedImage.update({
+    where: {
+      id: +req.params.imageId
+    },
+    data: {
+      deletedAt: new Date()
+    }
+  })
+  res.status(API_RESPONSE_CODES.SUCCESS).send()
+}
+
+async function getAll(req, res) {
+  let result = await prisma.userUploadedImage.findMany({
+    where: {
+      userId: req.user.id
+    }
+  })
+
+  res.json({
+    code: "SUCCESS",
+    data: result
+  });
 }
 
 module.exports = router

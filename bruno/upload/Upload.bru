@@ -1,0 +1,15 @@
+meta {
+  name: Upload
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{apiURL}}uploads
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  file: @file(D:\User\Gallery\Wallpapers\windows-11-minimal-windows-logo-5k-8k-3840x2160-7381.png)
+}

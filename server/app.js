@@ -25,7 +25,7 @@ const authRouter = require("./routers/authRouter")
 const properyRouter = require("./routers/properyRouter");
 const itemRouter = require("./routers/itemRouter")
 const uploadRouter = require("./routers/uploadRouter")
-const userRouter = require("./routers/userRouter")
+const accountRouter = require("./routers/accountRouter")
 const userAuthMiddleware = require("./middlewares/userAuthMiddleware");
 const prisma = require("./config/db");
 
@@ -59,13 +59,9 @@ app.get("/test", function (req, res) {
 
 app.use(APIT_ROUTE_PATH + "/auth/", authRouter)
 app.use(APIT_ROUTE_PATH + "/properties/", properyRouter)
-app.use(APIT_ROUTE_PATH + "/items/", properyRouter)
-app.use(APIT_ROUTE_PATH + "/upload/", userAuthMiddleware, uploadRouter)
-app.use(APIT_ROUTE_PATH + "/", userAuthMiddleware, userRouter)
-
-
-
-
+app.use(APIT_ROUTE_PATH + "/items/", itemRouter)
+app.use(APIT_ROUTE_PATH + "/uploads/", userAuthMiddleware, uploadRouter)
+app.use(APIT_ROUTE_PATH + "/", userAuthMiddleware, accountRouter)
 
 
 app.listen(port, function (info) {
