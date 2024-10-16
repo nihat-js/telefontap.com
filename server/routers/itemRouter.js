@@ -50,9 +50,10 @@ function addToFavorites() {
 
 
 async function createItem(req, res) {
-  const {
-    brand,
-    brandID,
+  let {
+    categoryId,
+    brandId,
+    model,
     price,
     description,
     storageInGB,
@@ -61,22 +62,53 @@ async function createItem(req, res) {
     city,
     country,
     color,
-    user
-
+    user,
+    isWhatsappActive
   } = req.body
+  let category = await prisma.category.findFirst({
+    where: {
+      id: categoryId,
+    }
+  })
+
+  let brand = await prisma.brand.findFirst({
+    where: {
+      id: brandId,
+    }
+  })
+
   const newItem = await prisma.item.create({
     data: {
-      brand,
-      userId: req.body.user.id,
-      price: req.body.price,
-      description: req.body.description,
-      storageInGB: req.body.storageInGB,
-      condition: req.body.condition,
-      warrantyIncluded: req.body.warrantyIncluded,
+      categoryId: category.id,
+      categoryName: category.name,
+      brandId: brand.id,
+      brandName: brand.name,
+      model: model,
+      color: color,
+      price: price,
+      description: description,
+      userId: user.id,
+      storageInGB: storageInGB,
+      condition: condition,
+      warrantyIncluded: warrantyIncluded,
+      isWhatsappActive: isWhatsappActive,
+      contactPhoneNumber: contactPhoneNumber,
     },
   });
+  await prisma.itemProperty.createMany({
+    data: [{
+      itemId: newItem.id,
+      key: "storageInGB",
+      value: storageInGB,
+    }, {
+      itemId: newItem.id,
+      key: ""
+    }]
+  })
 
   let imageURLS = await prisma.userUploadedImage.findMany({ where: { ma } })
+
+
 
   return res.status(201).json(newItem);
 }

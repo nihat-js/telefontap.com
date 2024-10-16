@@ -26,9 +26,9 @@ const properyRouter = require("./routers/properyRouter");
 const itemRouter = require("./routers/itemRouter")
 const uploadRouter = require("./routers/uploadRouter")
 const accountRouter = require("./routers/accountRouter")
+const notificationRouter = require("./routers/notificationRouter")
 const userAuthMiddleware = require("./middlewares/userAuthMiddleware");
 const prisma = require("./config/db");
-
 const APIT_ROUTE_PATH = "/api/" + API_VERSIONING.CURRENT_VERSION
 const app = express()
 
@@ -62,6 +62,7 @@ app.use(APIT_ROUTE_PATH + "/properties/", properyRouter)
 app.use(APIT_ROUTE_PATH + "/items/", itemRouter)
 app.use(APIT_ROUTE_PATH + "/uploads/", userAuthMiddleware, uploadRouter)
 app.use(APIT_ROUTE_PATH + "/", userAuthMiddleware, accountRouter)
+app.use(APIT_ROUTE_PATH + "/notifications", userAuthMiddleware, notificationRouter)
 
 
 app.listen(port, function (info) {

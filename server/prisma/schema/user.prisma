@@ -1,17 +1,18 @@
 model User {
-  id                    Int       @id @default(autoincrement())
-  name                  String?
-  email                 String    @unique
-  phoneNumber           String?   @unique
-  password              String
-  emailVerifiedAt       DateTime?
-  phoneNumberVerifiedAt DateTime?
-  balance               Float     @default(0)
-  profilePicture        String?
-  lastLogin             DateTime?
-  lastPasswordChange    DateTime?
-  status                String    @default("ACTIVE")
-  twoFactorEnabled      Boolean   @default(false)
+  id                      Int       @id @default(autoincrement())
+  name                    String?
+  email                   String    @unique
+  phoneNumber             String?   @unique
+  password                String
+  emailVerifiedAt         DateTime?
+  phoneNumberVerifiedAt   DateTime?
+  balance                 Float     @default(0)
+  profilePicture          String?
+  lastLogin               DateTime?
+  lastPasswordChange      DateTime?
+  status                  String    @default("ACTIVE")
+  twoFactorEnabled        Boolean   @default(false)
+  unseenNotificationCount Int       @default(0)
 
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
@@ -80,11 +81,10 @@ model ActvitiyLog {
 }
 
 model Notification {
-  id       Int              @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   userId   Int
   message  String
-  isRead   Boolean          @default(false)
-  type     NotificationType
+  // type     NotificationType
   metadata String?
 
   createdAt DateTime  @default(now())
@@ -94,10 +94,10 @@ model Notification {
   User User @relation(fields: [userId], references: [id])
 }
 
-enum NotificationType {
-  AD
-  CAMPAIGN
-}
+// enum NotificationType {
+//   AD
+//   CAMPAIGN
+// }
 
 model SearchHistory {
   id         Int      @id @default(autoincrement())

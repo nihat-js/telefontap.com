@@ -89,19 +89,26 @@ enum ItemStatus {
 }
 
 model Item {
-  id               Int     @id @default(autoincrement())
-  category         String? // Consider using a relation to a Category model for better organization
-  categoryId       String?
-  brand            String?
-  brandId          Int? // @relation(fields: [brandId], references: [id]) // Ensure foreign key relation if there's a Brand model
-  model            String?
-  modelId          Int? // @relation(fields: [modelId], references: [id]) // Same for Model, if applicable
-  color            String?
-  price            Float
-  description      String?
-  userId           Int
-  user             User    @relation(fields: [userId], references: [id]) // Relation to User model
-  isWhatsappActive Boolean @default(false)
+  id                 Int           @id @default(autoincrement())
+  categoryId         Int?
+  categoryName       String? // Consider using a relation to a Category model for better organization
+  brandId            Int? // @relation(fields: [brandId], references: [id]) // Ensure foreign key relation if there's a Brand model
+  brandName          String?
+  model              String?
+  color              String?
+  price              Float
+  description        String?
+  userId             Int
+  contactPhoneNumber String?
+  condition          ItemCondition // e.g., "new", "used"
+  cityId             Int?
+  cityName           String?
+  countryId          Int?
+  countryName        String?
+  isWhatsappActive   Boolean       @default(false)
+  starCount          Int           @default(0)
+  viewCount          Int           @default(0)
+  warranty           String? // Optional warranty information
 
   status ItemStatus @default(IN_REVIEW)
 
@@ -109,22 +116,14 @@ model Item {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  images             ItemImage[] // @relation("ItemImages") // Ensure correct naming for the relation
-  favorites          Favorite[] // @relation("ItemFavorites") // Correct naming for favorites
-  favoritedCount     Int         @default(0)
-  viewCount          Int         @default(0)
-  contactPhoneNumber String?
+  user      User        @relation(fields: [userId], references: [id]) // Relation to User model
+  images    ItemImage[] // @relation("ItemImages") // Ensure correct naming for the relation
+  favorites Favorite[] // @relation("ItemFavorites") // Correct naming for favorites
 
   // Add additional fields if necessary
-  condition   ItemCondition // e.g., "new", "used"
-  cityId      Int?
-  cityName    String?
-  countryId   Int?
-  countryName String?
 
   city         City?          @relation(fields: [cityId], references: [id])
   country      Country?       @relation(fields: [countryId], references: [id])
-  warranty     String? // Optional warranty information
   ItemProperty ItemProperty[]
 }
 

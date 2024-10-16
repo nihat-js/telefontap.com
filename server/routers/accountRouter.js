@@ -18,6 +18,7 @@ router.delete("/account/sessions/:sessionId", logoutSession)
 router.delete("/account/sessions/:sessionId", logoutSession)
 
 router.post('/account/change-password', changePassword);
+// router.post('/account/preferences', preferences);
 
 // router.delete("")
 

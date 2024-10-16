@@ -171,7 +171,7 @@ async function resetPassword(req, res) {
   }
   const code = generateResetPasswordByEmailCode()
   let emailService = new EmailService()
-  // emailService.sendVerificationEmail()
+  // emailService.sendVerificationEmail(code)
   await prisma.verificationCode.create({
     data: {
       code,
